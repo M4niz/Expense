@@ -3,6 +3,7 @@ import { DollarSign, Shield, Calendar, User2, PowerOff, PowerIcon, LayoutDashboa
 import EmployeeDashboard from './Dashboard/EmployeeDashboard';
 import Navbar from '../components/Navbar';
 import ValidatorDashboard from './Dashboard/ValidatorDashboard';
+import EmployeeReports from './reports/EmployeeReports';
 const Layout = () => {
   return (
 
@@ -61,8 +62,9 @@ const Layout = () => {
   {/* RIGHT CONTENT */}
   <div className="w-full lg:w-[80vw] h-screen overflow-y-auto bg-white">
     <Navbar />
-    <EmployeeDashboard />
+    {/* <EmployeeDashboard /> */}
     {/* <ValidatorDashboard/> */}
+    <EmployeeReports/>
 
 
     {/* bottom section for navigate */}
