@@ -4,8 +4,9 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [selectedrole, setSelectedRole] = useState("");
+  const [valid, setValid] = useState(false);
   return (
-    <UserContext.Provider value={{ selectedrole, setSelectedRole }}>
+    <UserContext.Provider value={{ selectedrole, setSelectedRole,valid, setValid }}>
       {children}
     </UserContext.Provider>
   );

@@ -2,9 +2,11 @@ import { Camera } from "lucide-react"
 import { useState } from "react"
 import Tesseract from "tesseract.js"
 import { parseReceipt } from "../../../utils/ocrParser"
+import useGlobalContext from "../../../config/GlobalStateContext"
 
 export default function Capture({ category, onDone }) {
   const [loading, setLoading] = useState(false)
+  const {valid, setValid} = useGlobalContext()
 
   const handleFile = async (file) => {
     setLoading(true)
@@ -19,8 +21,11 @@ export default function Capture({ category, onDone }) {
         receipts: [file],
         mode: "capture",
       },
-      Boolean(parsed.amount && parsed.date)
+      
+      Boolean(parsed.amount)
     )
+    console.log(parsed)
+
 
     setLoading(false)
   }

@@ -31,10 +31,10 @@ export function parseReceipt(text) {
   }
 
   const dateMatch =
-    cleanText.match(/\d{2}[\/\-]\d{2}[\/\-]\d{4}/) ||
-    cleanText.match(/\d{4}[\/\-]\d{2}[\/\-]\d{2}/)
+    cleanText.match(/\b\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}\b/) 
 
-  const date = dateMatch ? dateMatch[0] : ""
+
+  const date = dateMatch ? dateMatch[0] :""
 
   return {
     merchant,

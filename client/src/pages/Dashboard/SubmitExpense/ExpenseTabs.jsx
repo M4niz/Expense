@@ -3,13 +3,14 @@ import { Camera, PenLine, FileStack } from "lucide-react"
 import Capture from "./Capture"
 import ManualEntry from "./ManualEntry"
 import CreateVoucher from "./CreateVoucher"
+import useGlobalContext from "../../../config/GlobalStateContext"
 
 export default function ExpenseTabs({ category, onNext, onBack }) {
   const [tab, setTab] = useState("capture")
   const [data, setData] = useState({})
-  const [valid, setValid] = useState(false)
+  const {valid, setValid} = useGlobalContext()
 
-  const handleDone = (payload, isValid) => {
+  const handleDone = (payload,isValid) => {
     setData(payload)
     setValid(isValid)
   }
