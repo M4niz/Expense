@@ -3,29 +3,61 @@ import { useState } from "react"
 import Tesseract from "tesseract.js"
 import { parseReceipt } from "../../../utils/ocrParser"
 import useGlobalContext from "../../../config/GlobalStateContext"
+import { convertPdfToImage } from "../../../utils/pdftoimg"
 
 export default function Capture({ category, onDone }) {
   const [loading, setLoading] = useState(false)
-  const {valid, setValid} = useGlobalContext()
+  const { setValid } = useGlobalContext()
 
-  const handleFile = async (file) => {
+  const runOCR = async (inputFile) => {
     setLoading(true)
 
-    const result = await Tesseract.recognize(file, "eng")
-    const parsed = parseReceipt(result.data.text)
+    try {
+      const {
+        data: { text },
+      } = await Tesseract.recognize(inputFile, "eng")
 
-    onDone(
-      {
-        ...parsed,
-        category,
-        receipts: [file],
-        mode: "capture",
-      },
+      if (!text || !text.trim()) {
+        setLoading(false)
+        return
+      }
+
+      const parsed = parseReceipt(text)
+
+      onDone(
+        {
+          ...parsed,
+          category,
+          receipts: [inputFile],
+          mode: "capture",
+        },
+        Boolean(parsed.amount)
+      )
+
+      setValid(Boolean(parsed.amount))
+    } catch (err) {
+      console.error("OCR failed:", err)
+    }
+
+    setLoading(false)
+  }
+
+  const handleFileUpload = async (uploaded) => {
+    if (!uploaded) return
+
+    setLoading(true)
+
+    try {
       
-      Boolean(parsed.amount)
-    )
-    console.log(parsed)
-
+      if (uploaded.type === "application/pdf") {
+        const imageFile = await convertPdfToImage(uploaded)
+        await runOCR(imageFile)
+      } else {
+        await runOCR(uploaded)
+      }
+    } catch (err) {
+      console.error("File processing failed:", err)
+    }
 
     setLoading(false)
   }
@@ -38,24 +70,24 @@ export default function Capture({ category, onDone }) {
 
       <h3 className="text-lg font-semibold">Capture Receipt</h3>
       <p className="text-sm text-orange-600 mt-1">
-        Take a photo or upload an image for instant processing
+        Upload a receipt for instant processing
       </p>
 
-      <div className="mt-6 flex justify-center gap-4">
+      <div className="mt-6 flex justify-center">
         <label className="cursor-pointer bg-orange-500 text-white px-5 py-2 rounded-lg text-sm">
           Upload File
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,.pdf"
             hidden
-            onChange={(e) => handleFile(e.target.files[0])}
+            onChange={(e) => handleFileUpload(e.target.files[0])}
           />
         </label>
-
-        <button className="border px-5 py-2 rounded-lg text-sm flex items-center gap-2">
-          <Camera size={16} /> Take Photo
-        </button>
       </div>
+
+      <p className="mt-3 text-xs text-gray-500">
+        Allowed formats: png, jpg, jpeg, pdf
+      </p>
 
       {loading && (
         <p className="mt-4 text-sm text-orange-600">
