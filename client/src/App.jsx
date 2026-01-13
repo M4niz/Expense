@@ -21,7 +21,7 @@ localStorage.setItem("login", "false")
  
 const App = () => {
   const [role, setRole] = useState("employee")
-  const [role, setRole] = useState("employee")
+
   return (
      <Routes>
           <Route path="/" element={<RoleSelection/>}/>
@@ -30,13 +30,7 @@ const App = () => {
             <Route path="*" element={<Routters />} />
           </Route>
         </Routes>
-     <Routes>
-          <Route path="/" element={<RoleSelection/>}/>
-          <Route path="/login" element={<AuthenticateUser/>} />
-          <Route path="/*" element={<Layout />}>
-            <Route path="*" element={<Routters />} />
-          </Route>
-        </Routes>
+ 
   )
 }
  
