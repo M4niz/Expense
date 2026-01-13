@@ -1,5 +1,4 @@
 import React from "react"
-import React from "react"
 import Layout from "./pages/Layout"
 import AuthenticateUser from './pages/AuthenticateUser'
 import RoleSelection from "./pages/RoleSelectionBoard"
@@ -20,7 +19,6 @@ const getLoggedIn = localStorage.getItem("login");
 localStorage.setItem("login", "false")
  
 const App = () => {
-  const [role, setRole] = useState("employee")
 
   return (
      <Routes>
