@@ -3,14 +3,15 @@ import { createContext, useContext, useState } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [selectedrole, setSelectedRole] = useState("");
+  const [selectedrole, setSelectedRole] = useState("validator");
+  const [localSelectedRole, setLocalSelectedRole] = useState("");
   const [valid, setValid] = useState(false);
   return (
-    <UserContext.Provider value={{ selectedrole, setSelectedRole,valid, setValid }}>
+    <UserContext.Provider value={{valid, setValid, localSelectedRole, setLocalSelectedRole,selectedrole, setSelectedRole }}>
       {children}
     </UserContext.Provider>
   );
-};
+};  
 
 
 const useGlobalContext =()=>{

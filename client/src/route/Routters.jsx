@@ -1,0 +1,48 @@
+import React, { useState } from 'react'
+import EmployeeDashboard from '../pages/Employee/EmployeeDashboard'
+import EmployeeReports from '../pages/Employee/EmployeeReports'
+import ValidatorDashboard from '../pages/Validator/ValidatorDashboard'
+import ValidatorReport from '../pages/Validator/ValidatorReport'
+import { Navigate, Routes, Route } from 'react-router-dom'
+import SubmitExpense from '../pages/Dashboard/SubmitExpense'
+import useGlobalContext from '../config/GlobalStateContext'
+
+const Routters = () => {
+const {selectedrole, localSelectedRole} = useGlobalContext()
+const dashboardConfig = {
+  employee: {
+    default: "dashboard",
+    routes: [
+      { path: "dashboard", label: "Dashboard", element: <EmployeeDashboard /> },
+      { path: "expense", label: "Dashboard", element: <SubmitExpense /> },
+      { path: "report", label: "Report", element: <EmployeeReports /> }
+    ]
+  },
+  validator: {
+    default: "dashboard",
+    routes: [
+      { path: "dashboard", label: "Dashboard", element: <ValidatorDashboard /> },
+      { path: "history", label: "history", element: <ValidatorReport /> }
+    ]
+  },
+//   admin: {
+//     default: "dashboard",
+//     routes: [
+//       { path: "dashboard", label: "Dashboard", element: <AdminHome /> },
+//       { path: "users", label: "Users", element: <AdminUsers /> }
+//     ]
+//   }
+}
+
+ const config = dashboardConfig[localSelectedRole || selectedrole];
+  return (
+    <Routes>
+      <Route index element={<Navigate to={config.default} replace />} />
+      {config.routes.map((r) => (
+        <Route key={r.path} path={r.path} element={r.element} />
+      ))}
+    </Routes>
+  );
+}
+
+export default Routters

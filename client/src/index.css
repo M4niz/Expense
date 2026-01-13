@@ -7,3 +7,9 @@
            focus:outline-none focus:ring-2 focus:ring-orange-400;
   }
 }
+
+.active{
+  background-color: rgb(255, 170, 60);
+  padding: 10px;
+
+}

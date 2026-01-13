@@ -1,7 +1,7 @@
 
 import { StatCard } from "../../components/StatCard";
 import FilterBar from "../../components/FilterBar";
-import { CardComp } from "../Dashboard/EmployeeDashboard";
+import { CardComp } from "./EmployeeDashboard";
 import ReportCard from "../../components/ReportCard";
 import PaymentRow from "../../components/PaymentRow";
 import {
