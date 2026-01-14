@@ -190,7 +190,7 @@ function logout(){
             </div>
           </div>
 
-          <button className="cursor-pointer mt-3 text-xs flex gap-2 items-center" onClick={logout}>
+          <button className="mt-3 text-xs flex gap-2 items-center" onClick={logout}>
             <PowerIcon className="size-3" />
             Sign out
           </button>
