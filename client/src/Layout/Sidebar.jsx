@@ -5,8 +5,8 @@ import useGlobalContext from '../config/GlobalStateContext';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-      
-   const {selectedrole, localSelectedRole, setLocalSelectedRole} = useGlobalContext();
+      const getRole = localStorage.getItem("role");
+   const {selectedrole, localSelectedRole,userData, setLocalSelectedRole, setLo} = useGlobalContext();
       const [isActive, setIsActive] = useState(selectedrole)
 
       // useEffect(()=>{
@@ -15,8 +15,6 @@ const Sidebar = () => {
 
       // },[localSelectedRole, selectedrole])
 
-  
-console.log(localSelectedRole)
   const employee = [
     {
     nav : "Dashboard",
@@ -78,7 +76,7 @@ console.log(localSelectedRole)
 
 let selectedRoleFields;
 
-switch (isActive ||selectedrole ){
+switch (isActive || getRole ){
   case "employee":
     selectedRoleFields = employee;
     break;
@@ -99,6 +97,18 @@ function setterFunc (e){
   setLocalSelectedRole(e)
 }
 
+function logout(){
+  fetch(`${import.meta.env.VITE_BACKEND_URL}user/logout`,
+    {
+      credentials:"include",
+      method:"GET"
+    }
+  )
+  .then((e)=> console.log(e.json()))
+  .then((e)=> console.log(e))
+  
+  navigate('/')
+}
  
   return (
      <aside className="hidden lg:flex flex-col w-[20vw] h-screen bg-orange-50 border-r border-[#d9770633]">
@@ -120,8 +130,8 @@ function setterFunc (e){
             {
               selectedrole == "employee" ?
               <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="text-white text-[10px] font-medium">Employee</p>
+              <User2 className=" size-5" />
+              <p className=" text-[10px] font-medium">{userData?.roles_name}</p>
             </div>
             : selectedrole == "validator" ? ( 
               <>
@@ -173,12 +183,12 @@ function setterFunc (e){
               <User2 className="size-5 text-white" />
             </div>
             <div>
-              <p className="text-xs">Employee</p>
-              <p className="text-[10px]">Marketing • {selectedrole}</p>
+              <p className="text-xs">{userData?.emp?.full_name}</p>
+              <p className="text-[10px]">{userData?.dept_name} • {userData?.roles_name}</p>
             </div>
           </div>
 
-          <button className="mt-3 text-xs flex gap-2 items-center">
+          <button className="mt-3 text-xs flex gap-2 items-center" onClick={logout}>
             <PowerIcon className="size-3" />
             Sign out
           </button>

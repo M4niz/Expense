@@ -1,6 +1,7 @@
 import { Album, ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit2, Edit3, Eye, HdIcon, PlusCircle, Receipt, RefreshCw, Search, Ticket, TicketCheck, Timer } from 'lucide-react'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import useGlobalContext from '../../config/GlobalStateContext';
 
 const EmployeeDashboard = () => {
     const navigate=useNavigate()
@@ -8,6 +9,7 @@ const EmployeeDashboard = () => {
     const ctg =["All Categories", "Travel", "Meals & entertainment", "Transpotaion", "Accomendation","Offie Suplliers"];
     const [searchKeys, setSearchKeys] = useState("Uber")
 
+    const {userData} = useGlobalContext()
 
     // sample data
     const expenses = [
@@ -131,7 +133,7 @@ console.log(filtredData)
 
 
                 <div className="space-y-">
-                    <h1 className='text-2xl'>Good afternoon, John</h1>
+                    <h1 className='text-2xl'>Good afternoon, {userData?.emp?.full_name}</h1>
                     <p className='text-sm font-medium text-[#653600f2]'>Welcome to your expense dashboard • Wednesday, January 7, 2026</p>
                 </div>
                  </div>

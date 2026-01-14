@@ -6,9 +6,11 @@ import ValidatorReport from '../pages/Validator/ValidatorReport'
 import { Navigate, Routes, Route } from 'react-router-dom'
 import SubmitExpense from '../pages/Dashboard/SubmitExpense'
 import useGlobalContext from '../config/GlobalStateContext'
+import AdminDashboard from '../pages/Admin/AdminDashboard'
 
 const Routters = () => {
 const {selectedrole, localSelectedRole} = useGlobalContext()
+
 const dashboardConfig = {
   employee: {
     default: "dashboard",
@@ -25,24 +27,24 @@ const dashboardConfig = {
       { path: "history", label: "history", element: <ValidatorReport /> }
     ]
   },
-//   admin: {
-//     default: "dashboard",
-//     routes: [
-//       { path: "dashboard", label: "Dashboard", element: <AdminHome /> },
-//       { path: "users", label: "Users", element: <AdminUsers /> }
-//     ]
-//   }
+  admin: {
+    default: "dashboard",
+    routes: [
+      { path: "dashboard", label: "Dashboard", element: <AdminDashboard/> },
+      // { path: "users", label: "Users", element: <AdminUsers /> }
+    ]
+  }
 }
 
  const config = dashboardConfig[localSelectedRole || selectedrole];
   return (
     <Routes>
-      <Route index element={<Navigate to={config.default} replace />} />
-      {config.routes.map((r) => (
-        <Route key={r.path} path={r.path} element={r.element} />
+      <Route index element={<Navigate to={config&&config?.default} replace />} />
+      {config?.routes.map((r) => (
+        <Route key={r?.path} path={r?.path} element={r.element} />
       ))}
     </Routes>
   );
 }
-
+666
 export default Routters

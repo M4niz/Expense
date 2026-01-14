@@ -10,7 +10,9 @@ export default function RoleSelection() {
 
 
   const nextToLogin =()=>{
-    navigate('/login')
+    localStorage.setItem("role", selectedrole)
+ navigate('/login')
+    
    
   }
   return (
