@@ -48,27 +48,27 @@ const Sidebar = () => {
  const admin = [
     {
     nav : "Dashboard",
-    link :"dashboard"
+    link :"/dashboard"
   },
     {
     nav : "validation history",
-    link :"validation history"
+    link :"/history"
   },
   {
     nav :"Approvals",
-    link :"Approvals",
+    link :"/approvals",
   },
   {
     nav : "Audit & Compliance",
-    link : "Auduit"
+    link : "/audit"
   },
   {
     nav: "Analytics", 
-    link: "Analytics", 
+    link: "/analytics", 
   },
   {
     nav:"Configuration",
-    link:"Configuration"
+    link:"/configuration"
   }
 
 
@@ -106,7 +106,7 @@ function logout(){
   )
   .then((e)=> console.log(e.json()))
   .then((e)=> console.log(e))
-  
+  localStorage.clear("login")
   navigate('/')
 }
  
@@ -114,7 +114,7 @@ function logout(){
      <aside className="hidden lg:flex flex-col w-[20vw] h-screen bg-orange-50 border-r border-[#d9770633]">
 
         {/* TOP */}
-        <div className="p-6 space-y-4 border-b border-[#d9770633]">
+        <div className="p-3 space-y-4 border-b border-[#d9770633]">
           <div className="flex gap-2 items-center">
             <span className="bg-white rounded-full p-1 border border-orange-300">
               <DollarSign className="size-5" />
@@ -126,18 +126,18 @@ function logout(){
           </div>
 
           <div className="bg-red rounded-2xl p-1 border border-orange-200">
-           <div className="flex gap-1">
+           <div className="flex">
             {
               selectedrole == "employee" ?
               <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className=" size-5" />
+              <User2 className=" size-4" />
               <p className=" text-[10px] font-medium">{userData?.roles_name}</p>
             </div>
             : selectedrole == "validator" ? ( 
               <>
               <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="text-white text-[10px] font-medium">Employee</p>
+              <User2 className="text-black size-4" />
+              <p className="text-black text-[10px] font-medium">Employee</p>
             </div>
              <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`}  onClick={()=> setterFunc("validator")} >
               <User2 className="text-black size-4" />
@@ -145,15 +145,15 @@ function logout(){
             </div>
               </>
             ): <>
-             <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="text-white text-[10px] font-medium">Employee</p>
+             <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
+              <User2 className="text-black size-4" />
+              <p className="text-black text-[10px] font-medium">Employee</p>
             </div>
-             <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
+             <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
               <User2 className="text-black size-4" />
               <p className="text-black text-[10px]" >Validator</p>
             </div>
-           <div className={`${isActive == "admin" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`}
+           <div className={`${isActive == "admin" ?"active":""} flex-1 rounded-xl  flex flex-col items-center justify-center`}
           onClick={()=> setterFunc("admin")} >
               <User2 className="text-black size-4" />
               <p className="text-black text-[10px]">Admin</p>

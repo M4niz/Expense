@@ -5,9 +5,9 @@ import useGlobalContext from '../config/GlobalStateContext';
 const ProtectedRoute = () => {
   const {authLoading, userLoggedIn } = useGlobalContext();
 
-
+const localStoredLogin = localStorage.getItem('login')
   // 2. Not logged in → redirect
-  if (false) {
+  if (!localStoredLogin) {
     return <Navigate to="/" replace />;
   }
 
