@@ -141,8 +141,8 @@ function setterFunc (e){
               </>
             ): <>
              <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="text-white text-[10px] font-medium">Employee</p>
+              <User2 className="text-black size-5" />
+              <p className="text-black text-[10px] font-medium">Employee</p>
             </div>
              <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
               <User2 className="text-black size-4" />

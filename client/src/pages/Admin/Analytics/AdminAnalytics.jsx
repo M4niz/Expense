@@ -27,22 +27,17 @@ import {
   Sector,
 } from "recharts"
 
-
-
 function AnalyticsHubHeader() {
   const [open, setOpen] = useState(false)
 
   return (
     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
-
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
           <BarChart3 className="text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Analytics Hub
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-900">Analytics Hub</h1>
           <p className="text-sm text-gray-500">
             Comprehensive expense analytics with predictive insights and optimization recommendations
           </p>
@@ -155,11 +150,7 @@ const monthlyData = [
   { month: "Jan 2024", spend: 248, budget: 250, expenses: 174, employees: 234 },
 ]
 
-
-
-const renderPieLabel = ({
-  cx, cy, midAngle, innerRadius, outerRadius, percent, name,
-}) => {
+const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
   const RADIAN = Math.PI / 180
   const radius = innerRadius + (outerRadius - innerRadius) * 0.6
   const x = cx + radius * Math.cos(-midAngle * RADIAN)
@@ -178,17 +169,15 @@ const renderPieLabel = ({
   )
 }
 
-
-
 export default function AdminAnalytics() {
   const [hoveredKpi, setHoveredKpi] = useState(null)
   const [activeCategory, setActiveCategory] = useState(null)
 
   return (
     <div className="p-6 bg-[#fffaf4] min-h-screen space-y-8">
-
       <AnalyticsHubHeader />
 
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpis.map((kpi, i) => {
           const Icon = kpi.icon
@@ -225,7 +214,7 @@ export default function AdminAnalytics() {
 
     
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
+        
         <div className="bg-white rounded-2xl p-5 shadow hover:shadow-xl transition">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center">
@@ -247,7 +236,7 @@ export default function AdminAnalytics() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 shadow hover:shadow-xl transition relative">
+        <div className="bg-white rounded-2xl p-5 shadow hover:shadow-xl transition relative overflow-visible">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center">
               <PieIcon className="text-green-600 size-4" />
@@ -255,36 +244,52 @@ export default function AdminAnalytics() {
             <h3 className="font-semibold">Category Distribution</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 items-center">
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  dataKey="percent"
-                  innerRadius={55}
-                  outerRadius={95}
-                  paddingAngle={2}
-                  label={renderPieLabel}
-                  labelLine={false}
-                  activeIndex={activeCategory}
-                  activeShape={(p) => <Sector {...p} outerRadius={p.outerRadius + 6} />}
-                  onMouseEnter={(_, i) => setActiveCategory(i)}
-                  onMouseLeave={() => setActiveCategory(null)}
-                >
-                  {categoryData.map((c, i) => (
-                    <Cell key={i} fill={c.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+          <div
+            className="grid grid-cols-2 gap-4 items-center relative"
+            onMouseLeave={() => setActiveCategory(null)}
+          >
+            <div className="relative">
+              <ResponsiveContainer width="100%" height={240}>
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    dataKey="percent"
+                    innerRadius={55}
+                    outerRadius={95}
+                    paddingAngle={2}
+                    label={renderPieLabel}
+                    labelLine={false}
+                    activeIndex={activeCategory}
+                    activeShape={(p) => <Sector {...p} outerRadius={p.outerRadius + 6} />}
+                    onMouseEnter={(_, i) => setActiveCategory(i)}
+                  >
+                    {categoryData.map((c, i) => (
+                      <Cell key={i} fill={c.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+
+              {activeCategory !== null && (
+                <div className="absolute right-[-36px] top-1/2 -translate-y-1/2
+                                bg-white rounded-xl shadow-xl p-4 w-60 text-sm z-30
+                                pointer-events-none">
+                  <p className="font-semibold mb-2">
+                    {categoryData[activeCategory].name}
+                  </p>
+                  <p>Amount: <b>${categoryData[activeCategory].amount}K</b></p>
+                  <p>Share: <b>{categoryData[activeCategory].percent}%</b></p>
+                </div>
+              )}
+            </div>
 
             <div className="space-y-2">
               {categoryData.map((c, i) => (
                 <div
                   key={i}
                   onMouseEnter={() => setActiveCategory(i)}
-                  onMouseLeave={() => setActiveCategory(null)}
-                  className="flex justify-between items-center px-3 py-2 rounded-xl bg-slate-50 hover:bg-white hover:shadow transition"
+                  className="flex justify-between items-center px-3 py-2 rounded-xl
+                             bg-slate-50 hover:bg-white hover:shadow transition"
                 >
                   <span className="text-xs font-medium">{c.name}</span>
                   <span className="text-xs font-semibold">{c.percent}%</span>
@@ -295,7 +300,6 @@ export default function AdminAnalytics() {
         </div>
       </div>
 
-     
       <div className="bg-white rounded-2xl p-6 shadow hover:shadow-2xl transition">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
@@ -314,7 +318,6 @@ export default function AdminAnalytics() {
           ))}
         </div>
       </div>
-
     </div>
   )
 }
