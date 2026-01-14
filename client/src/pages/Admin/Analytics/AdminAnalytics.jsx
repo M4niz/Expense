@@ -220,9 +220,9 @@ export default function AdminAnalytics() {
  
       {activeTab === "overview" && (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ">
            
-            <div className="bg-white rounded-2xl p-5 shadow">
+            <div className="bg-white rounded-2xl p-5 shadow hover:shadow-lg transition">
               <div className="flex items-center gap-2 mb-2">
                 <Activity className="text-indigo-600" />
                 <h3 className="font-semibold">Spending Trends</h3>
@@ -241,8 +241,8 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 shadow relative">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="bg-white rounded-2xl p-5 shadow relative hover:shadow-lg transition">
+              <div className="flex items-center gap-2 mb-2 hover:shadow-lg transition">
                 <PieIcon className="text-green-600" />
                 <h3 className="font-semibold">Category Distribution</h3>
               </div>
@@ -295,7 +295,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow">
+          <div className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="text-orange-600" />
               <h3 className="font-semibold">Monthly Performance</h3>
@@ -317,7 +317,7 @@ export default function AdminAnalytics() {
       {activeTab === "departments" && (
         <div className="space-y-6">
           {departments.map((d, i) => (
-            <div key={i} className="bg-white rounded-2xl p-6 shadow">
+            <div key={i} className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${d.color}`}>
