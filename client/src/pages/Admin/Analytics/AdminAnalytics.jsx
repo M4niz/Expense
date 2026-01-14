@@ -24,7 +24,7 @@ import {
   Sector,
 } from "recharts"
 
-/* ================= DATA ================= */
+
 
 const kpis = [
   {
@@ -102,7 +102,7 @@ const departments = [
   { name: "Operations", employees: 22, spend: "$581K" },
 ]
 
-/* ================= PIE LABEL ================= */
+
 
 const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
   const RADIAN = Math.PI / 180
@@ -122,7 +122,7 @@ const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, n
   )
 }
 
-/* ================= PAGE ================= */
+
 
 export default function AdminAnalytics() {
   const [hoveredKpi, setHoveredKpi] = useState(null)
@@ -132,7 +132,7 @@ export default function AdminAnalytics() {
   return (
     <div className="p-6 bg-[#fffaf4] min-h-screen space-y-8">
 
-      {/* KPIs */}
+     
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpis.map((kpi, i) => {
           const Icon = kpi.icon
@@ -167,7 +167,7 @@ export default function AdminAnalytics() {
         })}
       </div>
 
-      {/* SECTION TABS */}
+      
       <div className="bg-white rounded-2xl p-2 shadow flex gap-2">
         {["overview", "departments"].map((tab) => (
           <button
@@ -184,12 +184,12 @@ export default function AdminAnalytics() {
         ))}
       </div>
 
-      {/* ================= OVERVIEW ================= */}
+    
       {activeTab === "overview" && (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            {/* Spending Trends */}
+           
             <div className="bg-white rounded-2xl p-5 shadow">
               <div className="flex items-center gap-2 mb-2">
                 <Activity className="text-indigo-600" />
@@ -209,7 +209,6 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </div>
 
-            {/* Category Distribution */}
             <div className="bg-white rounded-2xl p-5 shadow relative overflow-visible">
               <div className="flex items-center gap-2 mb-2">
                 <PieIcon className="text-green-600" />
@@ -220,7 +219,7 @@ export default function AdminAnalytics() {
                 className="grid grid-cols-2 gap-4 items-center"
                 onMouseLeave={() => setActiveCategory(null)}
               >
-                {/* PIE */}
+           
                 <div className="relative">
                   <ResponsiveContainer width="100%" height={240}>
                     <PieChart>
@@ -252,7 +251,6 @@ export default function AdminAnalytics() {
                   )}
                 </div>
 
-                {/* CATEGORY BREAKDOWN */}
                 <div className="space-y-2">
                   {categoryData.map((c, i) => (
                     <div
@@ -280,7 +278,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
 
-          {/* Monthly Performance */}
+        
           <div className="bg-white rounded-2xl p-6 shadow">
             <div className="flex items-center gap-2 mb-4">
               <Calendar className="text-orange-600" />
