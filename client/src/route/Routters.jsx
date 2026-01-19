@@ -8,9 +8,11 @@ import SubmitExpense from '../pages/Dashboard/SubmitExpense'
 import AdminAnalytics from "../pages/Admin/Analytics/AdminAnalytics"
 import AdminAudit from '../pages/Admin/Audit&Compliance/Audit'
 import useGlobalContext from '../config/GlobalStateContext'
+import AdminDashboard from '../pages/Admin/AdminDashboard'
 
 const Routters = () => {
 const {selectedrole, localSelectedRole} = useGlobalContext()
+
 const dashboardConfig = {
   employee: {
     default: "dashboard",
@@ -27,9 +29,11 @@ const dashboardConfig = {
       { path: "history", label: "history", element: <ValidatorReport /> }
     ]
   },
+ 
    admin: {
-  default: "analytics",
+  default: "dashboard",
   routes: [
+     { path: "dashboard", label: "Dashboard", element: <AdminDashboard/> },
     { path: "analytics", label: "Analytics", element: <AdminAnalytics /> },
     { path: "audit", label: "Audit", element: <AdminAudit/> }
   ],
@@ -39,12 +43,12 @@ const dashboardConfig = {
  const config = dashboardConfig[localSelectedRole || selectedrole];
   return (
     <Routes>
-      <Route index element={<Navigate to={config.default} replace />} />
-      {config.routes.map((r) => (
-        <Route key={r.path} path={r.path} element={r.element} />
+      <Route index element={<Navigate to={config&&config?.default} replace />} />
+      {config?.routes.map((r) => (
+        <Route key={r?.path} path={r?.path} element={r.element} />
       ))}
     </Routes>
   );
 }
-
+666
 export default Routters

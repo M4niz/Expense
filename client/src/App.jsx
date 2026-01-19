@@ -9,27 +9,30 @@ import { Routes, Route, Navigate } from "react-router-dom"
 
 
 import Routters from "./route/Routters"
+import ProtectedRoute from "./route/ProtectedRoute"
+import useGlobalContext from "./config/GlobalStateContext"
 // import useGlobalContext from './config/GlobalStateContext'
  
- localStorage.setItem("login","false");
- 
-const getLoggedIn = localStorage.getItem("login");
- 
- 
-localStorage.setItem("login", "false")
+
  
 const App = () => {
+   const { userLoggedIn } = useGlobalContext();
+   
+ console.log(userLoggedIn)
+
 
   return (
      <Routes>
           <Route path="/" element={<RoleSelection/>}/>
           <Route path="/login" element={<AuthenticateUser/>} />
-          <Route path="/*" element={<Layout />}>
-            <Route path="*" element={<Routters />} />
-          </Route>
+         <Route element={<ProtectedRoute/>}>
+    <Route path="/*" element={<Layout />}>
+      <Route path="*" element={<Routters />} />
+    </Route>
+  </Route>
         </Routes>
  
-  )
+  ) 
 }
  
 export default App

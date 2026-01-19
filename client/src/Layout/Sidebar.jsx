@@ -1,12 +1,25 @@
-import { DollarSign, LayoutDashboardIcon, PowerIcon, User2 } from 'lucide-react'
+import { DollarSign, 
+  LayoutDashboardIcon, //nav icons
+  ReceiptIndianRupee,
+  ChartColumnBig,
+  History,
+  CircleCheckBig,
+  ShieldCheck,
+  Settings2, 
+  PowerIcon, 
+  User, 
+  User2, 
+  ShieldUser, 
+  UserCheck,
+  Icon,} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useGlobalContext from '../config/GlobalStateContext';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-      
-   const {selectedrole, localSelectedRole, setLocalSelectedRole} = useGlobalContext();
+      const getRole = localStorage.getItem("role");
+   const {selectedrole, localSelectedRole,userData, setLocalSelectedRole, setUserData} = useGlobalContext();
       const [isActive, setIsActive] = useState(selectedrole)
 
       // useEffect(()=>{
@@ -15,20 +28,21 @@ const Sidebar = () => {
 
       // },[localSelectedRole, selectedrole])
 
-  
-console.log(localSelectedRole)
   const employee = [
     {
     nav : "Dashboard",
-    link :"/dashboard"
+    link :"/dashboard",
+    Icon : LayoutDashboardIcon
   },
     {
     nav : "Expense Submit",
-    link :"/expense"
+    link :"/expense",
+    Icon : ReceiptIndianRupee
   },
     {
     nav : "Report",
-    link :"/report"
+    link :"/report",
+    Icon : ChartColumnBig
   },
   
 
@@ -38,11 +52,13 @@ console.log(localSelectedRole)
  const validator = [
     {
     nav : "Dashboard",
-    link :"/dashboard"
+    link :"/dashboard",
+    Icon : LayoutDashboardIcon
   },
     {
     nav : "validation history",
-    link :"/history"
+    link :"/history",
+    Icon : History
   }
 
 
@@ -50,29 +66,31 @@ console.log(localSelectedRole)
  
  const admin = [
   {
-    nav:"Analytics",
-    link:"/analytics"
-  },
-    {
     nav : "Dashboard",
-    link :"dashboard"
-  },
-    {
-    nav : "validation history",
-    link :"validation history"
-  },
+    link :"/dashboard",
+    Icon : LayoutDashboardIcon
+  },  
   {
     nav :"Approvals",
-    link :"Approvals",
+    link :"/approvals",
+    Icon : CircleCheckBig
   },
   {
     nav : "Audit & Compliance",
-    link : "/audit"
+    link : "/audit",
+    Icon : ShieldCheck
+  },
+
+  {
+    nav:"Analytics",
+    link:"/analytics",
+    Icon:ChartColumnBig
   },
   
   {
     nav:"Configuration",
-    link:"Configuration"
+    link:"/configuration",
+    Icon : Settings2
   }
 
 
@@ -80,7 +98,7 @@ console.log(localSelectedRole)
 
 let selectedRoleFields;
 
-switch (isActive ||selectedrole ){
+switch (isActive || getRole ){
   case "employee":
     selectedRoleFields = employee;
     break;
@@ -101,12 +119,25 @@ function setterFunc (e){
   setLocalSelectedRole(e)
 }
 
+function logout(){
+  fetch(`${import.meta.env.VITE_BACKEND_URL}user/logout`,
+    {
+      credentials:"include",
+      method:"GET"
+    }
+  )
+  .then((e)=> console.log(e.json()))
+  .then((e)=> console.log(e))
+  localStorage.clear("login")
+  setUserData("")
+  navigate('/')
+}
  
   return (
      <aside className="hidden lg:flex flex-col w-[20vw] h-screen bg-orange-50 border-r border-[#d9770633]">
 
         {/* TOP */}
-        <div className="p-6 space-y-4 border-b border-[#d9770633]">
+        <div className="p-3 space-y-4 border-b border-[#d9770633]">
           <div className="flex gap-2 items-center">
             <span className="bg-white rounded-full p-1 border border-orange-300">
               <DollarSign className="size-5" />
@@ -118,36 +149,36 @@ function setterFunc (e){
           </div>
 
           <div className="bg-red rounded-2xl p-1 border border-orange-200">
-           <div className="flex gap-1">
+           <div className="flex">
             {
               selectedrole == "employee" ?
-              <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="cursor-pointer text-white text-[10px] font-medium">Employee</p>
+              <div className={`${isActive == "employee" ?"active":""}  cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
+              <User className="text-black size-5" />
+              <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
             </div>
             : selectedrole == "validator" ? ( 
               <>
-              <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-white size-5" />
-              <p className="cursor-pointer text-white text-[10px] font-medium">Employee</p>
+              <div className={`${isActive == "employee" ?"active":""} cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
+              <User className="text-black size-5" />
+              <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
             </div>
-             <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`}  onClick={()=> setterFunc("validator")} >
-              <User2 className="text-black size-4" />
+             <div className={`${ isActive == "validator" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
+              <UserCheck className="text-black size-4" />
               <p className="cursor-pointer text-black text-[10px]" >Validator</p>
             </div>
               </>
             ): <>
-             <div className={`${isActive == "employee" ?"active":""}  flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User2 className="text-black size-5" />
+             <div className={`${isActive == "employee" ?"active":""} cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
+              <User className="text-black size-5" />
               <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
             </div>
-             <div className={`${ isActive == "validator" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
-              <User2 className="text-black size-4" />
+             <div className={`${ isActive == "validator" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
+              <UserCheck className="text-black size-4" />
               <p className="cursor-pointer text-black text-[10px]" >Validator</p>
             </div>
-           <div className={`${isActive == "admin" ?"active":""} flex-1 rounded-xl h-20 flex flex-col items-center justify-center`}
+           <div className={`${isActive == "admin" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`}
           onClick={()=> setterFunc("admin")} >
-              <User2 className="text-black size-4" />
+              <ShieldUser className="text-black size-4" />
               <p className="cursor-pointer text-black text-[10px]">Admin</p>
             </div></>
             }
@@ -159,32 +190,50 @@ function setterFunc (e){
         <nav className="p-6 flex-1">
           <ul className="space-y-2 text-xs font-medium">
             {
-              selectedRoleFields.map((e)=> <li onClick={()=> navigate(`${e.link}`)} className="text-xs  font-medium flex items-center gap-2 hover:bg-yellow-200 p-2 rounded-lg">
-          <LayoutDashboardIcon className="size-4"/>
-        {e.nav}</li>)
-            }
+            selectedRoleFields.map((e) => {
+              const Icon = e.Icon
+              return (
+                <li
+                  key={e.link}
+                  onClick={() => navigate(e.link)}
+                  className="text-xs font-medium flex items-center gap-2 hover:bg-yellow-200 p-2 rounded-lg cursor-pointer"
+                >
+                  {Icon && <Icon className="size-4" />}
+                  {e.nav}
+                </li>
+              )
+            })
+          }
+
 
         
           </ul>
         </nav>
 
         {/* BOTTOM */}
-        <div className="p-6 border-t border-[#d9770633]">
-          <div className="bg-white p-3 flex items-center gap-2 rounded-xl">
-            <div className="bg-orange-300 rounded-full p-1">
-              <User2 className="size-5 text-white" />
-            </div>
-            <div>
-              <p className="text-xs">Employee</p>
-              <p className="text-[10px]">Marketing • {selectedrole}</p>
-            </div>
-          </div>
-
-          <button className="cursor-pointer mt-3 text-xs flex gap-2 items-center">
-            <PowerIcon className="size-3" />
-            Sign out
-          </button>
-        </div>
+         <div className="mt-auto w-fill p-2 flex flex-col gap-2">
+  {/* Profile Section - Centered Layout */}
+  <div className="bg-white p-4 flex flex-row items-center gap-1 rounded-xl border border-gray-100">
+    <div className="bg-orange-400 rounded-full p-3 shrink-0">
+      <User2 className="size-5 text-white" />
+    </div>
+    <div className="text-center w-full">
+      <p className="text-md font-semibold text-gray-800 truncate">
+        {userData?.emp?.full_name}
+      </p>
+      <p className="text-[11px] font-semibold text-gray-400 truncate uppercase tracking-wider">
+        {userData?.dept_name} • {userData?.roles_name}
+      </p>
+    </div>
+  </div>
+  <button 
+    onClick={logout}
+    className="group cursor-pointer flex items-center justify-center gap-2 w-full py-2.5 bg-white hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
+  >
+    <PowerIcon className="size-4" />
+    <span className="text-sm font-semibold">Sign out</span>
+  </button>
+</div>
       </aside>
 
   )
