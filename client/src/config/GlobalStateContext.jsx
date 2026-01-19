@@ -26,7 +26,7 @@ const [authLoading, setAuthLoading] = useState(true);
    setUserLoggedIn(true)
    setAuthLoading(false)
   setUserData(data.data[0])
-  setSelectedRole(data?.data[0]?.roles_name)
+  setSelectedRole(data?.data[0]?.roles_name )
     }
    
  
@@ -35,6 +35,7 @@ const [authLoading, setAuthLoading] = useState(true);
  
  
   useEffect(() => {
+    setSelectedRole(localStorage.getItem("role"))
   check();
 }, []);
  

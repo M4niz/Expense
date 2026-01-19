@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [LoginLoading, setLoginLoading] = useState(false);
-  const [seterror, setError] = useState(false);
+  const [ErrorCode, setErrorCode] = useState('');
   const { selectedrole, setUserData, userData, setUserLoggedIn } =
     useGlobalContext();
   const navigate = useNavigate();
@@ -43,6 +43,13 @@ const APIs = import.meta.env.VITE_BACKEND_URL
           
           navigate('/dashboard')
            }
+        else if (e2.status == 400){
+            setErrorCode("400")
+        }
+        else if (e2.status == 500){
+            setErrorCode("500")
+            console.log("Dispallllllll")
+        }
            else{
              setLoginLoading(false)
             setError(true)
@@ -110,9 +117,11 @@ const APIs = import.meta.env.VITE_BACKEND_URL
         </div>
 
         {/* Error */}
-        {seterror && (
+        {ErrorCode !="" && (
           <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 flex items-center gap-2">
-           <Info className="size-4"/> Invalid {selectedrole} ID or password
+             <Info className="size-4"/> {
+              ErrorCode == "400" ? "Unauthorized Access": ErrorCode == "500" ?"Invaild Username / password":"Invaild Username / password"
+            }
           </div>
         )}
 

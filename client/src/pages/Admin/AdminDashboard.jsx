@@ -212,7 +212,7 @@ const insights = [
             </div>
 
             {/* Chart Container (KEY FIX) */}
-            <div className="w-full h-[280px]">
+            <div className="w-full h-70">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={spendingData}>
                   <defs>
@@ -465,7 +465,7 @@ const InsightCard = ({
           Impact: <span className="font-semibold">{impact}</span>
         </p>
 
-        <button className="flex text-xs items-center gap-1 text-sm font-medium text-orange-600 hover:underline">
+        <button className="flex items-center gap-1 text-sm font-medium text-orange-600 hover:underline">
           Take Action
           <span className="text-lg">→</span>
         </button>

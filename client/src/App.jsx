@@ -11,6 +11,7 @@ import { Routes, Route, Navigate } from "react-router-dom"
 import Routters from "./route/Routters"
 import ProtectedRoute from "./route/ProtectedRoute"
 import useGlobalContext from "./config/GlobalStateContext"
+import PublicRoute from "./route/PublicRoute"
 // import useGlobalContext from './config/GlobalStateContext'
  
 
@@ -23,12 +24,14 @@ const App = () => {
 
   return (
      <Routes>
+      <Route element={<PublicRoute/>}>
           <Route path="/" element={<RoleSelection/>}/>
           <Route path="/login" element={<AuthenticateUser/>} />
-         <Route element={<ProtectedRoute/>}>
+          </Route>
+        
     <Route path="/*" element={<Layout />}>
       <Route path="*" element={<Routters />} />
-    </Route>
+  
   </Route>
         </Routes>
  

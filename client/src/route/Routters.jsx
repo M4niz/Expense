@@ -9,6 +9,8 @@ import AdminAnalytics from "../pages/Admin/Analytics/AdminAnalytics"
 import AdminAudit from '../pages/Admin/Audit&Compliance/Audit'
 import useGlobalContext from '../config/GlobalStateContext'
 import AdminDashboard from '../pages/Admin/AdminDashboard'
+import NotFound from '../pages/NotFoundPage'
+import Apporvals from '../pages/Admin/Apporvals/Apporvals'
 
 const Routters = () => {
 const {selectedrole, localSelectedRole} = useGlobalContext()
@@ -19,14 +21,16 @@ const dashboardConfig = {
     routes: [
       { path: "dashboard", label: "Dashboard", element: <EmployeeDashboard /> },
       { path: "expense", label: "Dashboard", element: <SubmitExpense /> },
-      { path: "report", label: "Report", element: <EmployeeReports /> }
+      { path: "report", label: "Report", element: <EmployeeReports /> },
+      { path: "*", label: "Report", element: <NotFound/> }
     ]
   },
   validator: {
     default: "dashboard",
     routes: [
       { path: "dashboard", label: "Dashboard", element: <ValidatorDashboard /> },
-      { path: "history", label: "history", element: <ValidatorReport /> }
+      { path: "history", label: "history", element: <ValidatorReport /> },
+        { path: "*", label: "Report", element: <NotFound/> }
     ]
   },
  
@@ -34,8 +38,10 @@ const dashboardConfig = {
   default: "dashboard",
   routes: [
      { path: "dashboard", label: "Dashboard", element: <AdminDashboard/> },
+     { path: "approvals", label: "Dashboard", element: <Apporvals/> },
     { path: "analytics", label: "Analytics", element: <AdminAnalytics /> },
-    { path: "audit", label: "Audit", element: <AdminAudit/> }
+    { path: "audit", label: "Audit", element: <AdminAudit/> },
+      { path: "*", label: "Report", element: <NotFound/> }
   ],
 },
 }
