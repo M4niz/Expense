@@ -1,120 +1,97 @@
-const {db} = require('../db/db.js')
+// const {db}=require('../db/db')
+// const {expense}=require('../model/expense/expnese')
+// const {category}=require('../model/expense/category')
+// const {Approval_history}=require('../model/expense/Approval_history')
+// const {advance_option}=require('../model/expense/advance_option')
+// const { eq } = require('drizzle-orm')
 
-const new_expense=async(req,res)=>{
-    try{
-        const {amount,category,vendor,purpose}=req.body
-        const id=req.user
-        const expense=await db.query('INSERT INTO expense (exp_id,emp_id,vendor,bus_purpose,amount,category) VALUES($1,$2,$3,$4,$5,$6)',[12,id,vendor,purpose,amount,category,])
-        if(!expense.rows){
-            console.log("err : ",expense)
-            res.status(400).json({
-                msg:"missing..."
-            })
-        }
-        res.status(200).json({
-            msg:"uploaded"
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal server err"
-        })
-    }
-}
+// const new_expense=async(req,res)=>{
+//     try{
+//         const {id}=req.user
+//         const {amount,date,merchant,category_id,business_purpose,adv_option}=req.body;
+//         let opt=null;
+//         if(adv_option){
+//             const {project,pay_met,loc,attendee,billable_client}=req.body;
+            
+//         }
 
-const my_expenses=async(req,res)=>{
-    try{
-        const id=req.user
-        console.log(id)
-        const expenses=await db.query('SELECT * FROM expense WHERE emp_id=$1',[id])
-        console.log(expenses.rows)
-        if(!expenses.rows){
-            res.status(200).json({
-                msg:"No expenses"
-            })
-            return
-        }
-        res.status(201).json({
-            msg:"your expenses",
-            data:expenses.rows
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal err"
-        })
-    }
-}
+//         await db.transaction(async(table)=>{
+//             const result=await table.insert(expense).values({
+//                 emp_id:id,
+//                 amount:amount,
+//                 date:date,
+//                 merchant:merchant,
+//                 cat_id:category_id,
+//                 business_purpose:business_purpose,
+//                 adv_opt:opt,
+//                 status:'Pending',
+//                 priority:'Low',
+//                 compliance:'Compliant',
+//                 next_level:'Validator',
+//             }).returning({exp_id})
+//             const sta=await table.insert(status_time_line).values({
+//                 emp_id:id,
+//                 exp_id:result,
+//                 status:'Submited',
+//             })
+//         })
 
-const show_all_expenses=async(req,res)=>{
-    try{
-        const expenses=await db.query('SELECT * FROM expense')
-        if(!expenses.rows){
-            res.status(200).json({
-                msg:"The expense and the expense is empty"
-            })
-        }
-        res.status(201).json({
-            msg:"expense",
-            data:expenses.rows
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal server error"
-        })
-    }
-}
 
-const validate_status=async(req,res)=>{
-    try{
-        const {status}=req.body
-        const {expense_id}=req.params
-        await db.quary('UPDATE TABLE_NAME SET validate_status=$1 WHERE id=$2',[status,expense_id])
-        res.status(200).json({
-            msg:"finished"
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"Internal server error"
-        })
-    }
-}
+//     }catch(err){
+//         res.status(500).json({
+//             msg:"internal server error"
+//         })
+//     }
+// }
 
-const admin_status=async(req,res)=>{
-    try{
-        const {pay_method,ref_num,pay_date,msg=''}=req.body
-        const {id}=req.params
-        await db.query('UPDATE TABLE_NAME SET pay_date=$1 AND ref_num=$2 AND pay_method=$3 AND msg=$4 status=approved WHERE id=$5',[pay_date,ref_num,pay_method,msg,id])
-        res.status(200).json({
-            msg:"status changed"
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal server error"
-        })
-    }
-}
+// const my_exp=async(req,res)=>{
+//     try{
+//         const {id}=req.user
+//         const result=await db.select().from(expense).where(eq(expense.emp_id,id))
+//         if(!result){
+//             return res.status(200).json({
+//                 msg:'the expenses empty'
+//             })
+//         }
+//         res.status(201).json({
+//             msg:result
+//         })
+//     }catch(err){
+//         res.status(500).json({
+//             msg:'internal server error'
+//         })
+//     }
+// }
 
-const status_reject=async(req,res)=>{
-    try{
-        const {msg=''}=req.body
-        const {id}=req.params
-        await db.quary('UPDATE TABLE_NAME SET status=reject AND msg=$1 WHERE id=$2',[msg,id])
-        res.status(200).json({
-            msg:"status changed"
-        })
-    }catch(err){
-        console.log(err)
-        res.status(500).json("internal server err")
-    }
-}
+// const show_particuler_expense=async(req,res)=>{
+//     try{
+//         const {id}=req.params
+//         await db.transaction(async(table)=>{
+//             const exp=await table.select().from(expense).where(eq(expense.exp_id,id))
+//             if(!exp){
+//                 return res.status(404).json({
+//                     msg:'The expense not found'
+//                 })
+//             }
+//             const status=await table.select().from(status_time_line).where(eq(status_time_line.exp_id,id))
+//             if(!status){
+//                 return res.status(404).json({
+//                     msg:'The expense not found'
+//                 })
+//             }
+//             res.status(200).json({
+//                 msg:'expense',
+//                 data:{
+//                     exp_detail:exp,
+//                     status_detail:status
+//                 }
+//             })
+//         })
+//     }catch(err){
+//         res.status(500).json({
+//             msg:'internal server error'
+//         })
+//     }
+// }
 
-const req_information=async(req,res)=>{
-    const client_id=req.quary
-    
-}
-
-module.exports={new_expense,my_expenses,show_all_expenses,validate_status,admin_status,status_reject,req_information}
+// module.exports={new_expense,my_exp,show_particuler_expense}

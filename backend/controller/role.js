@@ -1,12 +1,12 @@
+const { eq } = require('drizzle-orm')
 const {db}=require('../db/db')
-
+const {roles}=require('../model/user/role')
 
 const add_roles=async(req,res)=>{
     try{
         const {role_id,role_name,des}=req.body
-        const date=new Date()
-        const value=await db.query('INSERT INTO roles (role_id,role_name,description,created_at,updated_at) VALUES($1,$2,$3,$4,$5)',[role_id,role_name,des,date,date])
-        if(!value.rows){
+        const value=await db.insert(roles).values({role_id:role_id,role_name:role_name,description:des})
+        if(!value){
             res.status(400).json({
                 msg:"something went wrong"
             })
@@ -31,7 +31,7 @@ const delete_role=async(req,res)=>{
                 msg:"Invalid data"
             })
         }
-        const value=await db.query('DELETE FROM roles WHERE role_id=$1',[id])
+        const value=await db.delete(roles).where(eq(roles.role_id,id))
         console.log(value.rows)
         res.status(202).json({
             msg:"The data deleted"

@@ -8,7 +8,6 @@ const EmployeeDashboard = () => {
     const statuses = [ "All Status", "Pending", "Approved", "Rejected", "Need Info", "Draft", "Processing", "Reimbursement", "Escalated", "Paid" ];
     const ctg =["All Categories", "Travel", "Meals & entertainment", "Transpotaion", "Accomendation","Offie Suplliers"];
     const [searchKeys, setSearchKeys] = useState("Uber")
-
     const {userData} = useGlobalContext()
 
     // sample data
@@ -120,7 +119,7 @@ const EmployeeDashboard = () => {
 // && e.merchant == e.merchant.includes(searchKeys)
 
 
-console.log(filtredData)
+// console.log(filtredData)
 
 
   return (

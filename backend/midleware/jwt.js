@@ -2,24 +2,34 @@ const jwt = require('jsonwebtoken')
 
 const token_generate=(id,res)=>{
     const token=jwt.sign({id:id},process.env.jwt_sceret_key,{expiresIn:'7d'})
-    res.cookie('token',token,{maxAge:7*24*60*60})
+    res.cookie('token',token,{
+        maxAge:7*24*60*60*1000,
+        sameSite:'none',
+        secure:true
+    })
+    return token
 }
 
 const token_decode=async(req,res,next)=>{
     try{
         const {token}=req.cookies
-        const data=jwt.decode(token,process.env.jwt_sceret_key)
-        if(!data){
+        if(!token){
             res.status(404).json({
-                msg:"user not found,go to login"
+                msg:'User not found,Go to login'
             })
             return
+        }
+        const data=jwt.decode(token,process.env.jwt_sceret_key)
+        if(!data){
+            return res.status(404).json({
+                msg:"user not found,go to login"
+            })
         }
         req.user=data.id
         next()
     }catch(err){
         console.log(err)
-        res.status(err).json({
+        res.status(500).json({
             msg:"internal server err"
         })
     }
