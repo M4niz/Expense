@@ -1,11 +1,17 @@
+const { eq } = require('drizzle-orm')
 const {db}=require('../db/db')
+const {dept}=require('../model/user/dept')
 
 const add_dept=async(req,res)=>{
     try{
         const {dept_id,dept_name}=req.body
-        const date=new Date()
-        const value=await db.query('INSERT INTO departments VALUES($1,$2,$3,$4)',[dept_id,dept_name,date,date])
-        if(!value.rows){
+        if(!dept_id||!dept_name){
+            return res.status(400).json({
+                msg:'Invalid'
+            })
+        }
+        const value=await db.insert(dept).values({deptartment_id:dept_id,name:dept_name})
+        if(!value){
             res.status(400).json({
                 msg:"Something Went Wrong"
             })
@@ -31,8 +37,8 @@ const delete_dept=async(req,res)=>{
             })
             return
         }
-        const value=await db.query('DELETE FROM departments WHERE dept_id=$1',[id])
-        if(!value.rows){
+        const value=await db.delete(dept).where(eq(dept.deptartment_id,id))
+        if(!value){
             res.status(404).json({
                 msg:"Invalid data's"
             })

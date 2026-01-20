@@ -35,9 +35,7 @@ const App = () => {
         <Route index element={<EmployeeDashboard />} />
         <Route path="submit" element={<SubmitExpense />} />
       </Route>
-
-=======
-      <Route path="/" element={<RoleSelection/>}/>
+     <Route path="/" element={<RoleSelection/>}/>
       <Route path="/login" element={<AuthenticateUser/>}/>
       <Route path="/employee" element={<Layout/>}/>
       <Route path="/employee/reports" element={<EmployeeReports/>}/>
