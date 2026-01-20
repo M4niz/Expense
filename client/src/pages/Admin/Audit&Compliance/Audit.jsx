@@ -238,13 +238,13 @@ export default function AdminAudit() {
 
 function handleAddCategory(){
   console.log(categoryForm)
-//   setCategoryForm({
-//   name: "",
-//   limit: "",
-//   description: "",
-//   receiptRequired: false,
-//   active: false,
-// })
+  setCategoryForm({
+  name: "",
+  limit: "",
+  description: "",
+  receiptRequired: false,
+  active: false,
+})
 }
 
 const [loading, setLoading] = useState(false)
