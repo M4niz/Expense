@@ -10,8 +10,6 @@ const EmployeeDashboard = () => {
     const [searchKeys, setSearchKeys] = useState("Uber")
     const {userData} = useGlobalContext()
 
-    const {userData} = useGlobalContext()
-
     // sample data
     const expenses = [
   {
