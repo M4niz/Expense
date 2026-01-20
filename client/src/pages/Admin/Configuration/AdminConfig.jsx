@@ -2,6 +2,8 @@ import { Bell, Building, Database, Download, RefreshCcw, Save, Settings2Icon, Sh
 import { useState } from "react";
 import Organization from "./sub/Organization";
 import System from "./sub/System";
+import WorkFlows from "./sub/WorkFlows";
+import Notification from "./sub/Notification";
 
 
 
@@ -57,6 +59,8 @@ export default function AdminConfig() {
       </div>
       {activeTab == "organization" && <Organization/>}
       {activeTab == "system" && <System/>}
+      {activeTab == "workflow" && <WorkFlows/>}
+      {activeTab == "notification" && <Notification/>}
 
         </div>
         );
