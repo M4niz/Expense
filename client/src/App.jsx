@@ -1,49 +1,44 @@
-import AuthenticateUser from "./pages/AuthenticateUser"
-import SubmitExpense from "./pages/Dashboard/SubmitExpense"
-import EmployeeDashboard from "./pages/Dashboard/EmployeeDashboard"
+import React from "react"
 import Layout from "./pages/Layout"
+import AuthenticateUser from './pages/AuthenticateUser'
+import RoleSelection from "./pages/RoleSelectionBoard"
 
 
 
 import { Routes, Route, Navigate } from "react-router-dom"
 
 
-import RoleSelection from './pages/RoleSelectionBoard'
-
-import EmployeeReports from './pages/reports/EmployeeReports'
+import Routters from "./route/Routters"
+import ProtectedRoute from "./route/ProtectedRoute"
+import useGlobalContext from "./config/GlobalStateContext"
+import PublicRoute from "./route/PublicRoute"
 // import useGlobalContext from './config/GlobalStateContext'
+ 
 
- localStorage.setItem("login","false");
-
-const getLoggedIn = localStorage.getItem("login");
-
-
-localStorage.setItem("login", "false")
-
+ 
 const App = () => {
-  return (
-    <Routes>
-
-     
-      <Route path="/" element={<RoleSelection />} />
-
+   const { userLoggedIn } = useGlobalContext();
    
-      <Route path="/login" element={<AuthenticateUser />} />
+ console.log(userLoggedIn)
 
-     
-      <Route path="/employee" element={<Layout />}>
-        <Route index element={<EmployeeDashboard />} />
-        <Route path="submit" element={<SubmitExpense />} />
-      </Route>
-     <Route path="/" element={<RoleSelection/>}/>
-      <Route path="/login" element={<AuthenticateUser/>}/>
-      <Route path="/employee" element={<Layout/>}/>
-      <Route path="/employee/reports" element={<EmployeeReports/>}/>
 
-    
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
-  )
+  return (
+     <Routes>
+      <Route element={<PublicRoute/>}>
+          <Route path="/" element={<RoleSelection/>}/>
+          <Route path="/login" element={<AuthenticateUser/>} />
+          </Route>
+        {/* missing protected route  */}
+        {/* <Route element={<ProtectedRoute/>} ></Route> */}
+    <Route path="/*" element={<Layout />}>
+      <Route path="*" element={<Routters />} />
+  
+  </Route>
+        </Routes>
+ 
+  ) 
 }
-
+ 
 export default App
+ 
+ 

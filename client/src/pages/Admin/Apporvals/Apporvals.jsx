@@ -1,0 +1,263 @@
+import { ActivityIcon, Download, Edit3, Eye, RefreshCw, Search, Target, Timer, Zap } from 'lucide-react'
+import React, { Activity } from 'react'
+import { CardComp } from '../../Employee/EmployeeDashboard'
+
+const Apporvals = () => {
+
+    const req = 
+        [
+  {
+    "id": "REQ-001",
+    "type": "Reimbursement",
+    "employee": {
+      "employeeId": "EMP-1023",
+      "name": "John Doe",
+      "department": "Finance"
+    },
+    "details": "Travel expenses for client meeting",
+    "amount": 245.75,
+    "dateSubmitted": "2025-01-10",
+    "priority": "High",
+    "status": "Pending",
+    "actions": ["Approve", "Reject"]
+  },
+  {
+    "id": "REQ-002",
+    "type": "Purchase Request",
+    "employee": {
+      "employeeId": "EMP-1041",
+      "name": "Sarah Smith",
+      "department": "IT"
+    },
+    "details": "New laptop for development work",
+    "amount": 1350.00,
+    "dateSubmitted": "2025-01-08",
+    "priority": "Medium",
+    "status": "Approved",
+    "actions": ["View"]
+  },
+  {
+    "id": "REQ-003",
+    "type": "Expense Claim",
+    "employee": {
+      "employeeId": "EMP-1007",
+      "name": "Michael Brown",
+      "department": "Marketing"
+    },
+    "details": "Conference registration fee",
+    "amount": 499.99,
+    "dateSubmitted": "2025-01-05",
+    "priority": "Low",
+    "status": "Rejected",
+    "actions": ["View", "Resubmit"]
+  }
+]
+
+  return (
+    <div className='p-3 space-y-6'>
+
+         <section className='  space-y-3 lg:space-y-0 bg-linear-to-r  borders  rounded-md  lg:flex items-center justify-between '>
+             
+
+                <div className="space-y-">
+                    <h1 className='text-xl'>Approval Center</h1>
+                    <p className='text-[12px] font- text-[#653600f2]'>Pre-validate employee expense requests before finance review</p>
+                </div>
+                 
+                    {/* buttons for applies */}
+
+                <div className="flex gap-2 items-center">
+                    <p className='text-xs'>Auto-approval</p>
+                    <button className='p-1 text-[10px] border bg-white border-[#d9770633] px-2  rounded-md flex items-center gap-2'><Download className='size-3'/> Export Queue</button>
+                    
+                </div>
+            </section>
+
+            {/* card section */}
+
+         
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 '>
+                 <CardComp Icons={Timer} title={"Pending Review"} count={4} inc={"$7472.67 total value"}/>
+                 <CardComp Icons={ActivityIcon} title={"Processing Time"} count={2.4} inc={"15% faster"}/>
+                 <CardComp Icons={Target} title={"Compliance Rate"} count={"94.2%"} inc={"2 SLA breaches"}/>
+                 <CardComp Icons={Zap} title={"Auto-approved Today"} count={15} inc={"Low risk expenses"}/>
+                           
+            </div>
+       
+
+
+
+       {/* filter section */}
+
+ <div className="w-full bg-white rounded-lg p-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-6 border-[#d9770633]  border">
+       
+      {/* Left side - Search */}
+      <div className="flex items-center w-full md:w-1/2 relative">
+        <Search className="text-[#92400E] mr-2 absolute top-2 left-2" size={16} />
+        <input
+          type="text"
+          placeholder="Search expenses, merchants..."
+          className="w-full pl-7 py-2 text-xs border text-[#92400E] border-[#d9770633]  rounded px-2 focus:outline-none focus:ring focus:ring-[#92400E]"
+        />
+      </div>
+
+      {/* Right side - Filters */}
+      <div className="flex items-center w-full md:w-1/2">
+        <div className="flex flex-wrap w-full  gap-3">
+     
+          
+        <button className="active px-4 text-xs py-2 border-[#d9770633] rounded-md  border">
+           All 6
+        </button>
+        <button className=" px-4 text-xs py-2 border-[#d9770633] rounded-md  border">
+           Pending 4
+        </button>
+        <button className="px-4 text-xs py-2 border-[#d9770633] rounded-md  border">
+           Flagged 1
+        </button>
+      
+        <button className=" px-4 text-xs py-2 border-[#d9770633] rounded-md  border">
+           Escalated 1
+        </button>
+
+        <button className=" px-4 text-xs py-2 bg-orange-50 border-[#d9770633] rounded-md  border">
+           sort by
+        </button>
+      </div>
+      
+
+      </div>
+    </div>
+
+
+
+ {/*TABLE --- list of Submited Expense */}
+
+    <section className='p-5 border border-[#d9770633] rounded-xl '>
+
+<div className=" space-y-6 ">
+
+<div className="flex items-center justify-between">
+  <div className="flex items-center">
+    <h3 className='font-medium'>Pending Requests</h3>
+  </div>
+
+   <div className="flex gap-2">
+                    <button className='p-1 text-xs border bg-white border-[#d9770633]  rounded-md flex items-center gap-2'><Download className='size-3'/> Export</button>
+                    <button className='p-1 text-xs border bg-white border-[#d9770633]    text-black flex items-center gap-2 rounded-md' ><RefreshCw className='size-3'/> Refresh</button>
+                </div>
+</div>
+
+<div className="overflow-scroll border border-[#d9770633] rounded-xl">
+<table className="w-full bg-white  border-[#d9770633] rounded-xl tbscroll">
+  <thead>
+    <tr className="bg-orange-50 text-left">
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600 ">ID</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Type</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Employee</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Details</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Amount</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Date Submitted</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Priority</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Status</th>
+      <th className="px-4 py-2 text-xs font-semibold text-gray-600">Actions</th>
+    </tr>
+  </thead>
+
+ <tbody>
+  {req.map((e, idx) => (
+    <tr
+      key={e.id}
+      className={`hover:bg-gray-50 transition ${
+        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+      }`}
+    >
+      {/* ID */}
+      <td className="px-4 py-2 text-[10px] font-medium text-gray-600">
+        {e.id}
+      </td>
+
+      {/* Type */}
+      <td className="px-4 py-2 text-[10px] font-medium">
+        {e.type}
+      </td>
+
+      {/* Employee */}
+      <td className="px-4 py-2 text-[10px]">
+        <div className="flex flex-col">
+          <span className="font-medium">{e.employee.name}</span>
+          <span className="text-gray-500">{e.employee.department}</span>
+        </div>
+      </td>
+
+      {/* Details */}
+      <td className="px-4 py-2 text-[10px] text-gray-700">
+        {e.details}
+      </td>
+
+      {/* Amount */}
+      <td className="px-4 py-2 text-[10px] font-semibold text-black">
+        ${e.amount.toFixed(2)}
+      </td>
+
+      {/* Date Submitted */}
+      <td className="px-4 py-2 text-[10px] text-gray-600">
+        {e.dateSubmitted}
+      </td>
+
+      {/* Priority */}
+      <td className="px-4 py-2 text-[10px]">
+        <span
+          className={`px-2 py-1 rounded font-medium
+            ${
+              e.priority === "High"
+                ? "bg-red-100 text-red-700"
+                : e.priority === "Medium"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-green-100 text-green-700"
+            }`}
+        >
+          {e.priority}
+        </span>
+      </td>
+
+      {/* Status */}
+      <td className="px-4 py-2 text-[10px]">
+        <span
+          className={`px-2 py-1 rounded font-medium
+            ${
+              e.status === "Approved"
+                ? "bg-green-100 text-green-700"
+                : e.status === "Pending"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }`}
+        >
+          {e.status}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td className="px-4 py-2 text-xs flex gap-2 cursor-pointer">
+        <Eye className="size-4 text-black" />
+        Review & Approve
+      </td>
+    </tr>
+  ))}
+</tbody>
+
+</table>
+</div>
+</div>
+
+    </section>
+
+
+
+
+
+    </div>
+  )
+}
+
+export default Apporvals

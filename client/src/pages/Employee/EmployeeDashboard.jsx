@@ -10,6 +10,8 @@ const EmployeeDashboard = () => {
     const [searchKeys, setSearchKeys] = useState("Uber")
     const {userData} = useGlobalContext()
 
+    const {userData} = useGlobalContext()
+
     // sample data
     const expenses = [
   {
@@ -132,7 +134,7 @@ const EmployeeDashboard = () => {
 
 
                 <div className="space-y-">
-                    <h1 className='text-2xl'>Good afternoon, {userData.employee_name}</h1>
+                    <h1 className='font-semibold text-2xl'>Good afternoon, {userData?.emp?.full_name}</h1>
                     <p className='text-sm font-medium text-[#653600f2]'>Welcome to your expense dashboard • Wednesday, January 7, 2026</p>
                 </div>
                  </div>
@@ -140,8 +142,8 @@ const EmployeeDashboard = () => {
 
                 <div className="flex gap-2">
 
-                    <button className='p-1 text-xs border bg-white border-[#d9770633]  rounded-md flex items-center gap-2'><Calendar className='size-3'/> This Month</button>
-                    <button type="button" onClick={()=>navigate("/employee/submit")} className='p-1 text-xs  bg-[#d97706] text-white flex items-center gap-2 rounded-md' ><PlusCircle className='size-3'/> New Expense</button>
+                    <button className='p-1 text-xs border bg-white border-[#d9770633]  rounded-md flex items-center gap-2'><Calendar  className='size-3'/> This Month</button>
+                    <button type="button" onClick={()=>navigate("/expense")} className='cursor-pointer p-2 text-xs  bg-[#d97706] text-white flex items-center gap-2 rounded-md' ><PlusCircle className='size-3'/> New Expense</button>
                 </div>
             </section>
 
@@ -306,7 +308,7 @@ export default EmployeeDashboard
 
 export const CardComp =({Icons, title, count, inc})=>{
     return (
-        <div className='p-2  bg-orange- rounded-xl border border-[#d9770633]'>
+        <div className='p-2 space-y-2  bg-orange- rounded-xl border border-[#d9770633]'>
             <div className="p-3  flex justify-between">
                 <div className="">
                     <h5 className='text-xs lg:text-md font-medium text-[#92400E] uppercase'>{title}</h5>

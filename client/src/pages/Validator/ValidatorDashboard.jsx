@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FileText, DollarSign, Clock, ShieldCheck } from "lucide-react"
+import { FileText, DollarSign, Clock, ShieldCheck, Download } from "lucide-react"
 import { StatCard } from "../../components/StatCard"
 import Row from "../../components/Row"
 
@@ -94,18 +94,27 @@ export default function ValidatorDashboard() {
     })
 
   return (
-    <div className="flex-1 bg-[#fff7ed] min-h-screen">
-      <main className="p-9">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-          Validator Dashboard
-        </h1>
+    <div className="flex-1 bg-[#fefdfc] min-h-screen">
+      <main className="p-3">
+       
+     <section className='py-4  lg:py-7 space-y-3 lg:space-y-0 bg-linear-to-r  borders  rounded-md  lg:flex items-center justify-between '>
+             
 
-        <p className="text-orange-600 mb-8">
-          Pre-validate employee expense requests before finance review
-        </p>
+                <div className="space-y-">
+                    <h1 className='text-2xl'>Validator Dashboard</h1>
+                    <p className='text-[12px] font- text-[#653600f2]'>Pre-validate employee expense requests before finance review</p>
+                </div>
+                 
+                    {/* buttons for applies */}
 
-      
-        <div className="grid grid-cols-4 gap-8 mb-10">
+                <div className="flex gap-2">
+
+                    <button className='p-1 text-xs border bg-white border-[#d9770633] px-2  rounded-md flex items-center gap-2'><Download className='size-3'/> This Month</button>
+                    
+                </div>
+            </section>
+       
+        <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           <StatCard
             icon={<FileText />}
             title="Total Pending Items"
