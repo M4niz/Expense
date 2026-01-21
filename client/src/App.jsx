@@ -29,11 +29,12 @@ const App = () => {
           <Route path="/login" element={<AuthenticateUser/>} />
           </Route>
         {/* missing protected route  */}
-        {/* <Route element={<ProtectedRoute/>} ></Route> */}
+        <Route element={<ProtectedRoute/>} >
     <Route path="/*" element={<Layout />}>
-      <Route path="*" element={<Routters />} />
-  
-  </Route>
+      <Route path="*" element={<Routters />} /> 
+      </Route>
+      </Route>
+
         </Routes>
  
   ) 
