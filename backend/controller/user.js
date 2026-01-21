@@ -22,8 +22,8 @@ const signup=async(req,res)=>{
         }
        let finish=await db.transaction(async(table)=>{
         console.log(dept_id)
-        const user=await table.select().from(profile).where(eq(profile.profile_id,emp_id))
-        if(user.length!=0){
+        const user_detail=await table.select().from(profile).where(eq(profile.profile_id,emp_id))
+        if(user_detail.length!=0){
             return res.status(400).json({
                 msg:"The user already existing"
             })
@@ -41,6 +41,8 @@ const signup=async(req,res)=>{
              username:full_name,
              dept_id:dept_id,
             })
+           
+           
         const emp_role_detail=await table.insert(employee_roles).values({profile_id:emp_id,role_id:role_detail[0].role_id})
         if(emp_status=='employee'){
             const {reporting_manager,expense_limit,allow_cat}=req.body;
@@ -87,7 +89,7 @@ const signup=async(req,res)=>{
                 })
             }
         }
-
+        
         if(!pro){
             table.rollback()
             return res.status(400).json({
@@ -103,7 +105,6 @@ const signup=async(req,res)=>{
                 msg:'Invalid data'
             })
        }
-
        res.status(200).json({
         msg:'user signed.'
        })
@@ -126,7 +127,7 @@ const signup=async(req,res)=>{
         const details=await db.select({roles:roles}).from(profile)
         .innerJoin(employee_roles,eq(employee_roles.profile_id,emp_id))
         .innerJoin(roles,eq(roles.role_id,employee_roles.role_id))
-        .where(eq(emp.employee_id,emp_id))
+        .where(eq(profile.profile_id,emp_id))
 
         if(details[0].roles.role_name!=emp_status){
             res.status(403).json({
@@ -174,14 +175,13 @@ const forget_pass=async(req,res)=>{
  const my_profile=async(req,res)=>{
     try{
         const id = req.user
-
-        const result=await db.select({emp:emp,dept_name:dept.name,roles_name:roles.role_name}).from(emp)
-        .innerJoin(dept,eq(dept.dept_id,emp.dept_id))
-        .innerJoin(employee_roles,eq(employee_roles.emp_id,id))
+        const result=await db.select({profile:profile,dept_name:dept.name,roles_name:roles.role_name}).from(profile)
+        .innerJoin(dept,eq(dept.deptartment_id,profile.dept_id))
+        .innerJoin(employee_roles,eq(employee_roles.profile_id,id))
         .innerJoin(roles,eq(employee_roles.role_id,roles.role_id))
-        .where(eq(emp.employee_id,id))
+        .where(eq(profile.profile_id,id))
         if(!result){
-            res.status(404).json({
+            return res.status(404).json({
                 msg:"user not found"
             })
         }
@@ -207,4 +207,4 @@ const forget_pass=async(req,res)=>{
     })
 }
 
-module.exports={signup,login,logout}
+module.exports={signup,login,logout,my_profile}

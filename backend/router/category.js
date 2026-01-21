@@ -4,6 +4,7 @@ const {cre_category, show_category, delete_category}=require('../controller/cate
 const {token_decode}=require('../midleware/jwt')
 
 router.route('/new_category').post(cre_category)
+// router.route('/new_category').post(token_decode,cre_category)
 router.route('/all_category').get(show_category)
 router.route('/delete_category/:id').delete(delete_category)
 

@@ -12,7 +12,7 @@ const cre_category=async(req,res)=>{
                 msg:'Invalid data'
             })
         }
-        const result=await db.insert(category).values({category_id:'cat_123',cat_name:cat_name,limit:limit,description:description,rec_req:rec_req,is_active:is_active,profile_id:'emp_121'})
+        const result=await db.insert(category).values({category_id:'cat_125',cat_name:cat_name,limit:limit,description:description,rec_req:rec_req,is_active:is_active,profile_id:'emp_127'})
         if(!result){
             return res.status(400).json({
                 msg:'Something went wrong'
