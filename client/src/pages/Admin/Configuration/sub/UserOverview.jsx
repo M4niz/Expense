@@ -13,6 +13,9 @@ export default function UserOverview() {
       setOverview(data)
     })
   },[])
+  if(!overview){
+    return null
+  }
   return (
     <div className="bg-white rounded-2xl p-6 shadow space-y-5">
       <h3 className="text-xs font-semibold">User Overview</h3>
