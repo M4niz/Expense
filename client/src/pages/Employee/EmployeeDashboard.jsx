@@ -1,5 +1,5 @@
 import { Album, ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit2, Edit3, Eye, HdIcon, PlusCircle, Receipt, RefreshCw, Search, Ticket, TicketCheck, Timer } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useGlobalContext from '../../config/GlobalStateContext';
 
@@ -7,119 +7,168 @@ const EmployeeDashboard = () => {
     const navigate=useNavigate()
     const statuses = [ "All Status", "Pending", "Approved", "Rejected", "Need Info", "Draft", "Processing", "Reimbursement", "Escalated", "Paid" ];
     const ctg =["All Categories", "Travel", "Meals & entertainment", "Transpotaion", "Accomendation","Offie Suplliers"];
-    const [searchKeys, setSearchKeys] = useState("Uber")
+    const [Refresh, setRefresh] = useState(false)
+    const [myExpenseData, setMyExpenseData] = useState("")
+    const [searchKeys , setSearchKeys ] = useState("")
+    const [selectedCategory , setSelectedCategory ] = useState("")
+    const [selectedStatus , setSelectedStatus ] = useState("")
     const {userData} = useGlobalContext()
 
     // sample data
-    const expenses = [
-  {
-    date: "2026-01-02",
-    merchant: "Uber",
-    category: "Travel",
-    amount: "$25.00",
-    status: "Pending",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-  {
-    date: "2026-01-03",
-    merchant: "Starbucks",
-    category: "Food",
-    amount: "$12.50",
-    status: "Approved",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-  {
-    date: "2026-01-04",
-    merchant: "Amazon",
-    category: "Office Supplies",
-    amount: "$45.00",
-    status: "Rejected",
-    compliance: "No",
-    receipt: "Missing",
-    actions: "Resubmit",
-  },
-  {
-    date: "2026-01-05",
-    merchant: "Hilton Hotel",
-    category: "Accommodation",
-    amount: "$220.00",
-    status: "Processing",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-  {
-    date: "2026-01-06",
-    merchant: "Dominos",
-    category: "Food",
-    amount: "$18.00",
-    status: "Paid",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-  {
-    date: "2026-01-07",
-    merchant: "Indigo Airlines",
-    category: "Travel",
-    amount: "$150.00",
-    status: "Pending",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "Approve",
-  },
-  {
-    date: "2026-01-08",
-    merchant: "Office Depot",
-    category: "Stationery",
-    amount: "$30.00",
-    status: "Approved",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-  {
-    date: "2026-01-09",
-    merchant: "Ola Cabs",
-    category: "Travel",
-    amount: "$20.00",
-    status: "Escalated",
-    compliance: "No",
-    receipt: "Missing",
-    actions: "Review",
-  },
-  {
-    date: "2026-01-10",
-    merchant: "KFC",
-    category: "Food",
-    amount: "$22.00",
-    status: "Draft",
-    compliance: "No",
-    receipt: "Missing",
-    actions: "Edit",
-  },
-  {
-    date: "2026-01-11",
-    merchant: "Marriott",
-    category: "Accommodation",
-    amount: "$180.00",
-    status: "Paid",
-    compliance: "Yes",
-    receipt: "Uploaded",
-    actions: "View",
-  },
-];
-
- const filtredData = expenses.filter((e)=>  e.merchant.toLowerCase().includes(searchKeys) ||
-  e.category.toLowerCase().includes(searchKeys))
-// && e.merchant == e.merchant.includes(searchKeys)
+//     const expenses = [
+//   {
+//     date: "2026-01-02",
+//     merchant: "Uber",
+//     category: "Travel",
+//     amount: "$25.00",
+//     status: "Pending",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+//   {
+//     date: "2026-01-03",
+//     merchant: "Starbucks",
+//     category: "Food",
+//     amount: "$12.50",
+//     status: "Approved",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+//   {
+//     date: "2026-01-04",
+//     merchant: "Amazon",
+//     category: "Office Supplies",
+//     amount: "$45.00",
+//     status: "Rejected",
+//     compliance: "No",
+//     receipt: "Missing",
+//     actions: "Resubmit",
+//   },
+//   {
+//     date: "2026-01-05",
+//     merchant: "Hilton Hotel",
+//     category: "Accommodation",
+//     amount: "$220.00",
+//     status: "Processing",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+//   {
+//     date: "2026-01-06",
+//     merchant: "Dominos",
+//     category: "Food",
+//     amount: "$18.00",
+//     status: "Paid",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+//   {
+//     date: "2026-01-07",
+//     merchant: "Indigo Airlines",
+//     category: "Travel",
+//     amount: "$150.00",
+//     status: "Pending",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "Approve",
+//   },
+//   {
+//     date: "2026-01-08",
+//     merchant: "Office Depot",
+//     category: "Stationery",
+//     amount: "$30.00",
+//     status: "Approved",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+//   {
+//     date: "2026-01-09",
+//     merchant: "Ola Cabs",
+//     category: "Travel",
+//     amount: "$20.00",
+//     status: "Escalated",
+//     compliance: "No",
+//     receipt: "Missing",
+//     actions: "Review",
+//   },
+//   {
+//     date: "2026-01-10",
+//     merchant: "KFC",
+//     category: "Food",
+//     amount: "$22.00",
+//     status: "Draft",
+//     compliance: "No",
+//     receipt: "Missing",
+//     actions: "Edit",
+//   },
+//   {
+//     date: "2026-01-11",
+//     merchant: "Marriott",
+//     category: "Accommodation",
+//     amount: "$180.00",
+//     status: "Paid",
+//     compliance: "Yes",
+//     receipt: "Uploaded",
+//     actions: "View",
+//   },
+// ];
 
 
-// console.log(filtredData)
+const ExpenseData = ()=>{
+
+  let url = import.meta.env.VITE_BACKEND_URL+"expenses/my_expense"
+
+  fetch(url, {
+    method:"GET",
+    credentials:"include"
+  })
+  .then((res)=> res.json())
+  .then((res)=> {
+    setRefresh(true);
+    setMyExpenseData(res.data)
+    setRefresh(false)
+  })
+  .catch(()=>{
+    setRefresh(false)
+  })
+
+}
+
+
+useEffect(()=>{
+  ExpenseData();
+  console.log(myExpenseData)
+},[Refresh])
+
+
+
+
+
+function dateFormater(date){
+
+  const format = date.toString().slice(0,10)
+  return format
+
+}
+
+const filteredData =
+  myExpenseData&&myExpenseData?.filter((e) => {
+    const exp = e.expense ?? {};
+
+    return (
+      
+     
+     (exp.exp_id?.toLowerCase().includes(searchKeys.toLowerCase())) ||
+      (exp.merchant?.toLowerCase().includes(searchKeys.toLowerCase())) ||
+       ( exp.status.toLowerCase() == (selectedStatus.toLowerCase()))
+    );
+  }) 
+console.log(filteredData)
 
 
   return (
@@ -132,7 +181,7 @@ const EmployeeDashboard = () => {
 
 
                 <div className="space-y-">
-                    <h1 className='font-semibold text-2xl'>Good afternoon, {userData?.emp?.full_name}</h1>
+                    <h1 className='font-semibold text-2xl'>Hi 👋, <span className='text-orange-600'>{userData?.profile?.full_name}</span></h1>
                     <p className='text-sm font-medium text-[#653600f2]'>Welcome to your expense dashboard • Wednesday, January 7, 2026</p>
                 </div>
                  </div>
@@ -148,10 +197,10 @@ const EmployeeDashboard = () => {
             {/* card sec */}
 
             <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 '>
-                 <CardComp Icons={Timer} title={"Pending Submissions"} count={1} inc={25.75}/> 
-                 <CardComp Icons={DollarSign} title={"This Month Total"} count={9} inc={95.95}/> 
-                 <CardComp Icons={Ticket} title={"Paid & Completed"} count={1} inc={205.85}/> 
-                 <CardComp Icons={ArrowUp} title={"Escalated Items"} count={1} inc={875.00}/> 
+                 <CardComp Icons={Timer} title={"Pending Submissions"} bg={"green-100"} txt={"green-400"} count={1} inc={25.75}/> 
+                 <CardComp Icons={DollarSign} title={"This Month Total"} bg={"red-100"} txt={"red-400"} count={9} inc={95.95}/> 
+                 <CardComp Icons={Ticket} title={"Paid & Completed"} bg={"yellow-100"} txt={"yellow-400"} count={1} inc={205.85}/> 
+                 <CardComp Icons={ArrowUp} title={"Escalated Items"} bg={"blue-100"} txt={"blue-400"} count={1} inc={875.00}/> 
                  
             </section>
 
@@ -165,6 +214,7 @@ const EmployeeDashboard = () => {
         <Search className="text-[#92400E] mr-2 absolute top-2 left-2" size={16} />
         <input
           type="text"
+          onChange={(e)=> setSearchKeys(e.target.value)}
           placeholder="Search expenses, merchants..."
           className="w-full pl-7 py-2 text-xs border text-[#92400E] border-[#d9770633]  rounded px-2 focus:outline-none focus:ring focus:ring-[#92400E]"
         />
@@ -175,10 +225,10 @@ const EmployeeDashboard = () => {
         <div className="grid grid-cols-5 w-full  gap-3">
         {/* Status Filters */}
        
-          <select className="px-3 col-span-2 py-1 rounded-md border border-[#d9770633]  bg-white  text-xs  focus:outline-none focus:ring focus:ring-[#92400E]">
+          <select className="px-3 col-span-2 py-1 rounded-md border border-[#d9770633]  bg-white  text-xs  focus:outline-none focus:ring focus:ring-[#92400E]" onChange={(e) => setSelectedStatus(e.target.value.toLowerCase())}>
             
             {
-statuses.map((e)=>(
+statuses?.map((e)=>(
 
                     <option value={e} key={e} className=' text-black'>{e }</option>
                 ))
@@ -191,9 +241,9 @@ statuses.map((e)=>(
         <select className="px-3 col-span-2 py-1 rounded-md border border-[#d9770633]  bg-white  text-xs  focus:outline-none focus:ring focus:ring-[#92400E]">
             
             {
-ctg.map((e)=>(
+ctg?.map((e)=>(
 
-                    <option value={e} key={e} className=' text-black'>{e }</option>
+                    <option value={e} key={e} className=' text-black' onClick={()=> setSelectedCategory(e)}>{e }</option>
                 ))
             }
             
@@ -216,12 +266,12 @@ ctg.map((e)=>(
 
 <div className="flex items-center justify-between">
   <div className="flex items-center">
-    <h3 className='font-medium'>Expense History{'(10)'}</h3>
+    <h3 className='font-medium'>Expense History {" "} ({myExpenseData&&myExpenseData.length})</h3>
   </div>
 
    <div className="flex gap-2">
                     <button className='p-1 text-xs border bg-white border-[#d9770633]  rounded-md flex items-center gap-2'><Download className='size-3'/> Export</button>
-                    <button className='p-1 text-xs border bg-white border-[#d9770633]    text-black flex items-center gap-2 rounded-md' ><RefreshCw className='size-3'/> Refresh</button>
+                    <button className='p-1 text-xs border bg-white border-[#d9770633]    text-black flex items-center gap-2 rounded-md' onClick={()=> setRefresh(true)} ><RefreshCw className={`size-3 ${Refresh && "animate-spin"}`}/> Refresh</button>
                 </div>
 </div>
 
@@ -240,53 +290,59 @@ ctg.map((e)=>(
     </tr>
   </thead>
 
-  <tbody>
-    {expenses.map((e, idx) => (
+ {
+ <tbody>
+    { filteredData && filteredData?.map((e, idx) => (
       <tr
         key={idx}
         className={` hover:bg-gray-50 transition ${
           idx % 2 === 0 ? "bg-white" : "bg-gray-50"
         }`}
       >
-        <td className="px-4 py-2 text-[10px] font-medium text-gray-600">{e.date}</td>
-        <td className="px-4 py-2 text-xs text-[10px] font-medium ">{e.merchant}</td>
-        <td className="px-4 py-2 text-xs text-[10px]">{e.category}</td>
-        <td className="px-4 py-2 text-xs font-medium text-black">{e.amount}</td>
+       <td className='flex flex-col '>
+         <span className="px-4  text-[11px] font-medium ">{dateFormater(e.expense.created_at)}</span>
+        <span className="px-4  text-[10px] font-medium text-gray-500">{e.expense.exp_id}</span>
+        
+       </td>
+        <td className="px-4 py-2 text-[11px] font-medium ">{e.expense.merchant}</td>
+        <td className="px-4 py-2 text-[11px] font-medium ">{e.cat_name}</td>
+        <td className="px-4 py-2 text-[11px]  font-bold text-black">₹ {e.expense.amount}</td>
         <td className="px-4 py-2 text-xs">
           <span
             className={`px-2 py-1 rounded text-[8px] font-medium
               ${
-                e.status === "Paid"
-                  ? "bg-green-100 text-green-700"
-                  : e.status === "Pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : e.status === "Rejected"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-blue-100 text-blue-700"
+                (e.expense.status) == "paid"
+                  ? "bg-green-100 text-green-700 border border-green-200"
+                  : e.expense.status.toLocaleLowerCase() == "pending"
+                  ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
+                  : e.expense.status.toLocaleLowerCase() == "rejected"
+                  ? "bg-red-100 text-red-700 border border-red-300"
+                  : "bg-blue-100 text-blue-700 border border-blue-300"
               }`}
           >
-            {e.status}
+            {e.expense.status}
           </span>
         </td>
         <td className="px-4 py-2 text-xs">
           <span
             className={`px-2 py-1 rounded text-[10px] font-medium ${
-              e.compliance === "Yes"
-                ? "bg-green-50 text-green-700"
-                : "bg-red-50 text-red-500"
+              e?.expense.compliance === "Compliant"
+                ? "bg-green-50 text-green-700 border border-green-200"
+                : "bg-red-50 text-red-500 border border-red-200"
             }`}
           >
-            {e.compliance}
+             {e.expense.compliance}
           </span>
         </td>
-        <td className="px-4 py-2 text-xs">{e.receipt == "Uploaded"? <TicketCheck className='size-4 text-green-600'/>:<CircleXIcon className='size-4 text-red-600'/>}</td>
-        <td className="px-4 py-2 text-xs cursor-pointer hover:underline flex  gap-2">
+        <td className="px-4 py-2 text-xs">{e?.expense.receipt == "Uploaded"? <TicketCheck className='size-4 text-green-600'/>:<CircleXIcon className='size-4 text-red-600'/>}</td>
+        <td className="px-4 py-2 text-xs items-center flex cursor-pointer hover:underline justify-center  gap-2">
           <Eye className='size-4 text-black'/>
           <Edit3 className='size-3 text-black'/>
         </td>
       </tr>
     ))}
   </tbody>
+ }
 </table>
 </div>
 </div>
@@ -304,22 +360,22 @@ export default EmployeeDashboard
 
 // card components
 
-export const CardComp =({Icons, title, count, inc})=>{
+export const CardComp =({Icons, title, count, inc, bg, txt})=>{
     return (
-        <div className='p-2 space-y-2  bg-orange- rounded-xl border border-[#d9770633]'>
+        <div className='p-2 space-y-2  bg-white shadow rounded-xl border border-[#d9770633]'>
             <div className="p-3  flex justify-between">
                 <div className="">
                     <h5 className='text-xs lg:text-md font-medium text-[#92400E] uppercase'>{title}</h5>
                     <p className='text-xl font-bold'>{count}</p>
-                    <span className='text-[12px] text-[#92400E] font-medium '>{inc}</span>
+                    <span className='text-[12px] text-[#b3693b] font-medium '>{inc}</span>
                 </div>
 
-                <div className="bg-yellow-50  border border-[#d9770633] text-amber-700 w-10 h-10 flex items-center justify-center rounded-md p-1">
-                    <Icons className="size-5"/>
+                <div className={` bg-${[bg]} text-${[txt]}  border border-[#d9770633] text-amber-700 w-10 h-10 flex items-center justify-center rounded-md p-1`}>
+                    <Icons className={`size-5 `}/>
                 </div>
             </div>
             <div className="bg-orange-50 w-full rounded-full h-1 relative">
-                <div className="bg-[#ffbc92] rounded-full overflow-hidden w-24  h-full absolute top-0 left-0 "></div>
+                <div className="bg-[#ff8234] rounded-full overflow-hidden w-24  h-full absolute top-0 left-0 "></div>
             </div>
         </div>
     )

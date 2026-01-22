@@ -27,7 +27,7 @@ const App = () => {
       <Route element={<PublicRoute/>}>
           <Route path="/" element={<AuthenticateUser/>} />
           </Route>
-        {/* missing protected route  */}
+     
         <Route element={<ProtectedRoute/>} >
     <Route path="/*" element={<Layout />}>
       <Route path="*" element={<Routters />} /> 

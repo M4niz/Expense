@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [selectedrole, setSelectedRole] = useState("");
+  const [selectedrole, setSelectedRole] = useState("employee" ||"");
   const [localSelectedRole, setLocalSelectedRole] = useState("");
   const [valid, setValid] = useState(false);
   const [userData, setUserData] = useState("");
@@ -14,9 +14,6 @@ const [authLoading, setAuthLoading] = useState(true);
 
 
      const check = async()=>{
- 
-  
-   
     try{
        const url = fetch("https://z6n0fcp0-5000.inc1.devtunnels.ms/user/profile", {
       method:'GET',
@@ -44,7 +41,7 @@ const [authLoading, setAuthLoading] = useState(true);
     }
  
  
-  useEffect(() => {
+useEffect(() => {
     check();
 }, []);
  

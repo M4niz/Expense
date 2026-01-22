@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useGlobalContext from "../../config/GlobalStateContext";
 import { useNavigate } from "react-router-dom";
-import { Check, Info, ShieldCheck, User2Icon, UserCheck2, UserCheck2Icon } from "lucide-react";
+import { Check, Info, LockKeyhole, ShieldCheck, User2Icon, UserCheck2, UserCheck2Icon } from "lucide-react";
 
 
 export default function LoginPage() {
@@ -11,6 +11,9 @@ export default function LoginPage() {
   const [ErrorCode, setErrorCode] = useState('');
   const { selectedrole,setSelectedRole, setUserData, userData ,setUserLoggedIn } = useGlobalContext();
   const navigate = useNavigate();
+
+  // isActive
+ 
 const APIs = import.meta.env.VITE_BACKEND_URL
 
 
@@ -142,15 +145,15 @@ Expense Management</h5>
         
       </div>
 
-  <div className=" rounded-xl shadow gap-2 flex justify-center flex-col">
+  <div className=" rounded-xl shadow-xl gap-2 flex bg-white justify-center flex-col border border-orange-200 ">
   
       
 
-      <div className=" bg-white rounded-2xl w-[400px]  ">
+      <div className="  rounded-2xl w-[400px]  ">
       
          {/* tab */}
 
-      <div className="grid grid-cols-3 place-items-center rounded-t-xl  gap-4 bg-gray-50">
+      <div className="grid grid-cols-3 place-items-center rounded-t-xl  gap-4 bg-gray-100">
   
 <div className={`${selectedrole == "employee" ? "bg-white border-b-2 rounded-tl-xl border-orange-400" :"bg-none"} flex items-center flex-col  w-full p-4`}
 onClick={()=> setSelectedRole("employee")}>
@@ -184,7 +187,7 @@ onClick={()=> setSelectedRole("admin")}>
 
 
  <div className="p-2 my-3">
-    <div className={`flex  w-full p-4 rounded-xl items-center gap-2 bg-orange-50/30 border border-b-4 border-orange-200 border`}>
+    <div className={`flex  w-full p-4 rounded-xl items-center gap-2 bg-orange-50/30 border border-b-4 border-orange-200`}>
           {/* icon */}
           <span className="bg-orange-100 rounded-md p-3">{Icon && <Icon className="size-4"/>}</span> 
           <div className="flex flex-col gap-1">
@@ -209,15 +212,19 @@ onClick={()=> setSelectedRole("admin")}>
           <label className="block text-xs font-medium text-gray-700 mb-1">
             Employee ID
           </label>
+          <div className="relative">
+          <span className=" h-full p-2 roun-md absolute flex items-center justify-center top-0 left-2 "><User2Icon className="size-3"/></span>
+          
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="EXP-7894-90"
-            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-xs
+            className="w-full rounded-lg pl-8 border border-gray-200 px-4 py-2.5 text-xs
                        focus:outline-none focus:ring-0.5 focus:ring-orange-400 focus:border-orange-400"
             required
           />
+          </div>
         </div>
 
         {/* Password */}
@@ -225,15 +232,18 @@ onClick={()=> setSelectedRole("admin")}>
           <label className="block text-xs font-medium text-gray-700 mb-1">
             Password
           </label>
-          <input
+         <div className="relative">
+          <span className=" h-full p-2 roun-md absolute flex items-center justify-center top-0 left-2 "><LockKeyhole className="size-3"/></span>
+           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            className="w-full text-xs rounded-lg border border-gray-200 px-4 py-2.5 
+            className="w-full text-xs rounded-lg pl-8 border border-gray-200 px-4 py-2.5 
                        focus:outline-none focus:ring-0.5 focus:ring-orange-400 focus:border-orange-400"
             required
           />
+         </div>
         </div>
 
         {/* Error */}
