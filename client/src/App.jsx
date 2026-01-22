@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "./pages/Layout"
-import AuthenticateUser from './pages/AuthenticateUser'
+import AuthenticateUser from './pages/LoginPage/AuthenticateUser'
 import RoleSelection from "./pages/RoleSelectionBoard"
 
 
@@ -25,15 +25,15 @@ const App = () => {
   return (
      <Routes>
       <Route element={<PublicRoute/>}>
-          <Route path="/" element={<RoleSelection/>}/>
-          <Route path="/login" element={<AuthenticateUser/>} />
+          <Route path="/" element={<AuthenticateUser/>} />
           </Route>
         {/* missing protected route  */}
-        {/* <Route element={<ProtectedRoute/>} ></Route> */}
+        <Route element={<ProtectedRoute/>} >
     <Route path="/*" element={<Layout />}>
-      <Route path="*" element={<Routters />} />
-  
-  </Route>
+      <Route path="*" element={<Routters />} /> 
+      </Route>
+      </Route>
+
         </Routes>
  
   ) 

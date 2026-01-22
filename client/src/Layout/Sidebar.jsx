@@ -11,16 +11,19 @@ import { DollarSign,
   User2, 
   ShieldUser, 
   UserCheck,
-  Icon,} from 'lucide-react'
+  Icon,
+  LogOut,} from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useGlobalContext from '../config/GlobalStateContext';
+import { adminNavLink, employeeNavLink, validatorNavLink } from '../data/NavLinks';
 
 const Sidebar = () => {
   const navigate = useNavigate();
-      const getRole = localStorage.getItem("role");
+  
+      // const getRole = localStorage.getItem("role");
    const {selectedrole, localSelectedRole,userData, setLocalSelectedRole, setUserData} = useGlobalContext();
-      const [isActive, setIsActive] = useState(selectedrole)
+      const [isActive, setIsActive] = useState(useLocation().pathname)
 
       // useEffect(()=>{
 
@@ -28,96 +31,32 @@ const Sidebar = () => {
 
       // },[localSelectedRole, selectedrole])
 
-  const employee = [
-    {
-    nav : "Dashboard",
-    link :"/dashboard",
-    Icon : LayoutDashboardIcon
-  },
-    {
-    nav : "Expense Submit",
-    link :"/expense",
-    Icon : ReceiptIndianRupee
-  },
-    {
-    nav : "Report",
-    link :"/report",
-    Icon : ChartColumnBig
-  },
-  
 
-
-]
-
- const validator = [
-    {
-    nav : "Dashboard",
-    link :"/dashboard",
-    Icon : LayoutDashboardIcon
-  },
-    {
-    nav : "validation history",
-    link :"/history",
-    Icon : History
-  }
-
-
-]
- 
- const admin = [
-  {
-    nav : "Dashboard",
-    link :"/dashboard",
-    Icon : LayoutDashboardIcon
-  },  
-  {
-    nav :"Approvals",
-    link :"/approvals",
-    Icon : CircleCheckBig
-  },
-  {
-    nav : "Audit & Compliance",
-    link : "/audit",
-    Icon : ShieldCheck
-  },
-
-  {
-    nav:"Analytics",
-    link:"/analytics",
-    Icon:ChartColumnBig
-  },
-  
-  {
-    nav:"Configuration",
-    link:"/configuration",
-    Icon : Settings2
-  }
-
-
-]
 
 let selectedRoleFields;
 
-switch (isActive || getRole ){
+switch (selectedrole ){
   case "employee":
-    selectedRoleFields = employee;
+    selectedRoleFields = employeeNavLink;
     break;
 
   case "admin":
-    selectedRoleFields = admin;
+    selectedRoleFields = adminNavLink;
     break;
 
   case "validator":
-    selectedRoleFields = validator;
+    selectedRoleFields = validatorNavLink;
     break;
 }
 
 
-function setterFunc (e){
-  setIsActive(e);
-  navigate("/dashboard")
-  setLocalSelectedRole(e)
+
+function changeRoute (elink){
+  setIsActive(elink);
+  navigate(elink)
+
 }
+
 
 function logout(){
   fetch(`${import.meta.env.VITE_BACKEND_URL}user/logout`,
@@ -148,56 +87,21 @@ function logout(){
             </div>
           </div>
 
-          <div className="bg-red rounded-2xl p-1 border border-orange-200">
-           <div className="flex">
-            {
-              selectedrole == "employee" ?
-              <div className={`${isActive == "employee" ?"active":""}  cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User className="text-black size-5" />
-              <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
-            </div>
-            : selectedrole == "validator" ? ( 
-              <>
-              <div className={`${isActive == "employee" ?"active":""} cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User className="text-black size-5" />
-              <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
-            </div>
-             <div className={`${ isActive == "validator" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
-              <UserCheck className="text-black size-4" />
-              <p className="cursor-pointer text-black text-[10px]" >Validator</p>
-            </div>
-              </>
-            ): <>
-             <div className={`${isActive == "employee" ?"active":""} cursor-pointer flex-1 rounded-xl h-20 flex flex-col items-center justify-center`} onClick={()=> setterFunc("employee")} >
-              <User className="text-black size-5" />
-              <p className="cursor-pointer text-black text-[10px] font-medium">Employee</p>
-            </div>
-             <div className={`${ isActive == "validator" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`} onClick={()=> setterFunc("validator")} >
-              <UserCheck className="text-black size-4" />
-              <p className="cursor-pointer text-black text-[10px]" >Validator</p>
-            </div>
-           <div className={`${isActive == "admin" ?"active":""} cursor-pointer flex-1 rounded-xl  flex flex-col items-center justify-center`}
-          onClick={()=> setterFunc("admin")} >
-              <ShieldUser className="text-black size-4" />
-              <p className="cursor-pointer text-black text-[10px]">Admin</p>
-            </div></>
-            }
-           </div>
-          </div>
+       
         </div>
 
         {/* NAV Links */}
-        <nav className="p-6 flex-1">
+        <nav className="p-6 flex-1 border-b border-orange-200">
           <ul className="space-y-2 text-xs font-medium">
             {
-            selectedRoleFields.map((e) => {
+            selectedRoleFields && selectedRoleFields.map((e) => {
               const Icon = e.Icon
               return (
                 <li
                   key={e.link}
-                  onClick={() => navigate(e.link)}
-                  className="text-xs font-medium flex items-center gap-2 hover:bg-yellow-200 p-2 rounded-lg cursor-pointer"
-                >
+                  onClick={() => changeRoute(e.link)}
+                  className={`${isActive == e.link ? "bg-orange-400 p-2 text-white":"bg-none hover:bg-orange-100"} text-xs font-medium flex items-center gap-2  p-2 rounded-lg cursor-pointer`}
+                 >
                   {Icon && <Icon className="size-4" />}
                   {e.nav}
                 </li>
@@ -211,28 +115,27 @@ function logout(){
         </nav>
 
         {/* BOTTOM */}
-         <div className="mt-auto w-fill p-2 flex flex-col gap-2">
-  {/* Profile Section - Centered Layout */}
-  <div className="bg-white p-4 flex flex-row items-center gap-1 rounded-xl border border-gray-100">
-    <div className="bg-orange-400 rounded-full p-3 shrink-0">
-      <User2 className="size-5 text-white" />
-    </div>
-    <div className="text-center w-full">
-      <p className="text-md font-semibold text-gray-800 truncate">
-        {userData?.emp?.full_name}
-      </p>
-      <p className="text-[11px] font-semibold text-gray-400 truncate uppercase tracking-wider">
-        {userData?.dept_name} • {userData?.roles_name}
-      </p>
-    </div>
-  </div>
-  <button 
+    <div className=" w-full px-4 py-6">
+           <div className="bg-gray-100 p-3 rounded-xl flex items-center justify-between gap-3">
+             <div className="flex items-center gap-2">
+              <div className="bg-orange-400 p-2 rounded-full">
+               <User2 className="text-white" size={16} />
+             </div>
+             <div>
+               <p className="text-xs font-medium">{userData?.profile?.full_name}</p>
+               <p className="text-[10px]">{userData?.dept_name} • {userData?.roles_name}</p>
+             </div>
+             </div>
+
+               <button 
     onClick={logout}
-    className="group cursor-pointer flex items-center justify-center gap-2 w-full py-2.5 bg-white hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
+    className="group cursor-pointer w-fit p-1 bg-white hover:bg-red-50 hover:text-red-600 rounded-full transition-all duration-200"
   >
-    <PowerIcon className="size-4" />
-    <span className="text-sm font-semibold">Sign out</span>
+    <LogOut className="size-4" />
+   
   </button>
+           </div>
+
 </div>
       </aside>
 

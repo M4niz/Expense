@@ -10,6 +10,7 @@ const dept=require('./router/dept_route.js')
 const limit=require('express-rate-limit')
 const category_router=require('./router/category.js')
 const port=process.env.port
+const work_flow_router=require('./router/workflow.js')
 
 const set_limit=limit({
     windowMs:10*60*1000,
@@ -32,6 +33,7 @@ app.use('/user',user_route)
 app.use('/roles',roles)
 app.use('/dept',dept)
 app.use('/category',category_router)
+app.use('/workflow',work_flow_router)
 
 app.listen(port,()=>{
     console.log("the server is running on ...",process.env.port)

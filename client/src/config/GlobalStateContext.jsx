@@ -10,24 +10,34 @@ export const UserProvider = ({ children }) => {
  const [userLoggedIn, setUserLoggedIn] = useState(false);
 const [authLoading, setAuthLoading] = useState(true);
  
-//   console.log(selectedrole)
+
 
 
      const check = async()=>{
  
-     const url = fetch("https://z6n0fcp0-5000.inc1.devtunnels.ms/user/profile", {
-      credentials: "include",
+  
+   
+    try{
+       const url = fetch("https://z6n0fcp0-5000.inc1.devtunnels.ms/user/profile", {
+      method:'GET',
+      credentials:'include'
     })
  
     const result = await url;
-   
-    if(result.status == 200){
+      if(result.status == 200){
    const data = await result.json();
    setUserLoggedIn(true)
    setAuthLoading(false)
   setUserData(data.data[0])
   setSelectedRole(data?.data[0]?.roles_name )
     }
+    }
+
+  catch(err){
+     
+      console.log(err)
+    
+  }
    
  
  
@@ -35,8 +45,7 @@ const [authLoading, setAuthLoading] = useState(true);
  
  
   useEffect(() => {
-    setSelectedRole(localStorage.getItem("role"))
-  check();
+    check();
 }, []);
  
 useEffect(() => {

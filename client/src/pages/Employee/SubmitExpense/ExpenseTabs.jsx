@@ -5,16 +5,19 @@ import ManualEntry from "./ManualEntry"
 import CreateVoucher from "./CreateVoucher"
 import useGlobalContext from "../../../config/GlobalStateContext"
 
+
 export default function ExpenseTabs({ category, onNext, onBack }) {
   const [tab, setTab] = useState("capture")
   const [data, setData] = useState({})
   const {valid, setValid} = useGlobalContext()
 
+  console.log(category)
   const handleDone = (payload,isValid) => {
     setData(payload)
     setValid(isValid)
   }
 
+  console.log(data)
   return (
     <div>
       {/* Back + Category pill */}
@@ -24,11 +27,11 @@ export default function ExpenseTabs({ category, onNext, onBack }) {
         </button>
 
         <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full text-sm">
-          <category.icon size={16} className="text-orange-600" />
-          <span className="font-medium">{category.title}</span>
-          {category.limitText && (
+          <category.Icon size={16} className="text-orange-600" />
+          <span className="font-medium">{category.category}</span>
+          {category.limit && (
             <span className="text-blue-600 bg-white px-2 py-0.5 rounded-full text-xs">
-              {category.limitText}
+             ₹ {category.limit}
             </span>
           )}
         </div>
