@@ -198,8 +198,6 @@ const [selectedCategory, setSelectedCategory] = useState(null)
   description: "",
   rec_req: false,
   is_active: false,
-  rec_req: false,
-  is_active: false,
 })
 
 
@@ -207,20 +205,7 @@ function handleAddCategory(){
   console.log(categoryForm)
   fetch(import.meta.env.VITE_BACKEND_URL+"category/new_category" , {
     method:"POST",
-    headers:{
-       "Content-Type": "application/json"
-    },
-    body:JSON.stringify(categoryForm)
-  }).then(()=> alert("Posted"))
-  setCategoryForm({
-  cat_name: "",
-  limit: 0,
-  description: "",
-  rec_req: false,
-  is_active: false,
-})
-  fetch(import.meta.env.VITE_BACKEND_URL+"category/new_category" , {
-    method:"POST",
+    credentials:'include',
     headers:{
        "Content-Type": "application/json"
     },
@@ -244,7 +229,8 @@ function handleDeleteCategory(ID){
   console.log(ID)
   setOpenAddCategory(false)
   fetch(import.meta.env.VITE_BACKEND_URL+`category/delete_category/${ID}` , {
-    method:'delete'
+    method:'delete',
+    credentials:'include'
 
   })
 }
@@ -261,7 +247,10 @@ const [loading, setLoading] = useState(false)
 const [CategoryData, setCategoryData] = useState([]);
 useEffect(()=>{
  
-  fetch(import.meta.env.VITE_BACKEND_URL+"category/all_category")
+  fetch(import.meta.env.VITE_BACKEND_URL+"category/all_category",{
+    method:"GET",
+    credentials:'include',
+  })
   .then((res)=> res.json())
   .then((res)=> setCategoryData(res.data))
  
@@ -507,7 +496,7 @@ useEffect(()=>{
 
       {/* Category List */}
       <div className="max-h-[320px] w-100 overflow-y-auto space-y-3 pr-1">
-            {CategoryData.map((cat) => (
+            {CategoryData?.map((cat) => (
           <div
           key={cat.id}
           className="flex flex-col gap-2 p-4 rounded-xl border border-orange-200 bg-orange-50 hover:bg-orange-100 transition"
@@ -595,7 +584,6 @@ useEffect(()=>{
             placeholder="e.g. Travel & Transportation"
             value={categoryForm.name}
             onChange={(e) => setCategoryForm({ ...categoryForm, cat_name: e.target.value })}
-            onChange={(e) => setCategoryForm({ ...categoryForm, cat_name: e.target.value })}
             className="w-full rounded-lg border bg-orange-50 border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-300"
           />
         </div>
@@ -617,7 +605,7 @@ useEffect(()=>{
             onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
             placeholder="Optional description"
             className="w-full bg-orange-50 rounded-lg border border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-300"
-         onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })} />
+          />
         </div>
 
         <div className="flex items-start justify-between gap-4">
@@ -630,7 +618,6 @@ useEffect(()=>{
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer"
             checked={categoryForm.receiptRequired} 
-            onChange={(e) => setCategoryForm({ ...categoryForm, rec_req: e.target.checked })}
             onChange={(e) => setCategoryForm({ ...categoryForm, rec_req: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
@@ -646,7 +633,6 @@ useEffect(()=>{
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer" 
             checked={categoryForm.active}
-            onChange={(e) => setCategoryForm({ ...categoryForm, is_active: e.target.checked })}
             onChange={(e) => setCategoryForm({ ...categoryForm, is_active: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
