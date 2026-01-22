@@ -1,10 +1,9 @@
-export default function ExpenseCategoryCard({ category, onSelect }) {
-  const Icon = category.icon
-
+export default function ExpenseCategoryCard({Icon, description ,limit,category,category_id,onSelect }) {
+ 
   return (
     <div
-      onClick={() => onSelect(category)}
-      className="
+      onClick={() => onSelect({Icon, description ,limit,category,category_id, onSelect})}
+      className="6
         group cursor-pointer rounded-2xl bg-white
         border border-orange-100
         p-6 transition-all duration-300
@@ -18,20 +17,20 @@ export default function ExpenseCategoryCard({ category, onSelect }) {
 
  
       <h3 className="text-lg font-semibold text-gray-900 group-hover:text-orange-600">
-        {category.title}
+        {category}
       </h3>
 
   
       <p className="text-sm text-orange-600 mt-1">
-        {category.description}
+        {description}
       </p>
 
  
-      {category.limitText && (
+    
         <span className="inline-block mt-4 text-xs font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-          {category.limitText}
+          {limit}
         </span>
-      )}
+
     </div>
   )
 }

@@ -2,8 +2,9 @@ import { Camera } from "lucide-react"
 import { useState } from "react"
 import Tesseract from "tesseract.js"
 import { parseReceipt } from "../../../utils/ocrParser"
-import useGlobalContext from "../../../config/GlobalStateContext"
 import { convertPdfToImage } from "../../../utils/pdftoimg"
+import useGlobalContext from "../../../config/GlobalStateContext"
+
 
 export default function Capture({ category, onDone }) {
   const [loading, setLoading] = useState(false)

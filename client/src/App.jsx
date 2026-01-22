@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "./pages/Layout"
-import AuthenticateUser from './pages/AuthenticateUser'
+import AuthenticateUser from './pages/LoginPage/AuthenticateUser'
 import RoleSelection from "./pages/RoleSelectionBoard"
 
 
@@ -12,7 +12,6 @@ import Routters from "./route/Routters"
 import ProtectedRoute from "./route/ProtectedRoute"
 import useGlobalContext from "./config/GlobalStateContext"
 import PublicRoute from "./route/PublicRoute"
-import AdminDashboard from "./pages/Admin/AdminDashboard"
 // import useGlobalContext from './config/GlobalStateContext'
  
 
@@ -26,18 +25,16 @@ const App = () => {
   return (
      <Routes>
       <Route element={<PublicRoute/>}>
-          <Route path="/" element={<RoleSelection/>}/>
-          <Route path="/login" element={<AuthenticateUser/>} />
+          <Route path="/" element={<AuthenticateUser/>} />
           </Route>
         {/* missing protected route  */}
-        {/* <Route element={<ProtectedRoute/>} > */}
-        <Route path="/dashboard" element={<AdminDashboard />} />
+        <Route element={<ProtectedRoute/>} >
     <Route path="/*" element={<Layout />}>
       <Route path="*" element={<Routters />} /> 
       </Route>
-      </Routes>
+      </Route>
 
-        
+        </Routes>
  
   ) 
 }
