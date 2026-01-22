@@ -228,22 +228,29 @@ export default function AdminAudit() {
   const [openAddCategory, setOpenAddCategory] = useState(false)
 
   const [categoryForm, setCategoryForm] = useState({
-  name: "",
-  limit: "",
+  cat_name: "",
+  limit: 0,
   description: "",
-  receiptRequired: false,
-  active: false,
+  rec_req: false,
+  is_active: false,
 })
 
 
 function handleAddCategory(){
   console.log(categoryForm)
+  fetch(import.meta.env.VITE_BACKEND_URL+"category/new_category" , {
+    method:"POST",
+    headers:{
+       "Content-Type": "application/json"
+    },
+    body:JSON.stringify(categoryForm)
+  }).then(()=> alert("Posted"))
   setCategoryForm({
-  name: "",
-  limit: "",
+  cat_name: "",
+  limit: 0,
   description: "",
-  receiptRequired: false,
-  active: false,
+  rec_req: false,
+  is: false,
 })
 }
 
@@ -537,7 +544,7 @@ const [loading, setLoading] = useState(false)
             type="text"
             placeholder="e.g. Travel & Transportation"
             value={categoryForm.name}
-            onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+            onChange={(e) => setCategoryForm({ ...categoryForm, cat_name: e.target.value })}
             className="w-full rounded-lg border bg-orange-50 border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-300"
           />
         </div>
@@ -557,7 +564,7 @@ const [loading, setLoading] = useState(false)
             type='text'
             placeholder="Optional description"
             className="w-full bg-orange-50 rounded-lg border border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-300"
-          />
+         onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })} />
         </div>
 
         <div className="flex items-start justify-between gap-4">
@@ -570,7 +577,7 @@ const [loading, setLoading] = useState(false)
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer"
             checked={categoryForm.receiptRequired} 
-            onChange={(e) => setCategoryForm({ ...categoryForm, receiptRequired: e.target.checked })}
+            onChange={(e) => setCategoryForm({ ...categoryForm, rec_req: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
             <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4" />
@@ -585,7 +592,7 @@ const [loading, setLoading] = useState(false)
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer" 
             checked={categoryForm.active}
-            onChange={(e) => setCategoryForm({ ...categoryForm, active: e.target.checked })}
+            onChange={(e) => setCategoryForm({ ...categoryForm, is_active: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
             <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-4" />

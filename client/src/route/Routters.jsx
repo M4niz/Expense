@@ -4,7 +4,7 @@ import EmployeeReports from '../pages/Employee/EmployeeReports'
 import ValidatorDashboard from '../pages/Validator/ValidatorDashboard'
 import ValidatorReport from '../pages/Validator/ValidatorReport'
 import { Navigate, Routes, Route } from 'react-router-dom'
-import SubmitExpense from '../pages/Dashboard/SubmitExpense'
+import SubmitExpense from "../pages/Employee/SubmitExpense/index"
 import AdminAnalytics from "../pages/Admin/Analytics/AdminAnalytics"
 import AdminAudit from '../pages/Admin/Audit&Compliance/Audit'
 import useGlobalContext from '../config/GlobalStateContext'

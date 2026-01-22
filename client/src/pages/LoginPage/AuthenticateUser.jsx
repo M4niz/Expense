@@ -1,0 +1,276 @@
+import React, { useState } from "react";
+import useGlobalContext from "../../config/GlobalStateContext";
+import { useNavigate } from "react-router-dom";
+import { Check, Info, ShieldCheck, User2Icon, UserCheck2, UserCheck2Icon } from "lucide-react";
+
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [LoginLoading, setLoginLoading] = useState(false);
+  const [ErrorCode, setErrorCode] = useState('');
+  const { selectedrole,setSelectedRole, setUserData, userData ,setUserLoggedIn } = useGlobalContext();
+  const navigate = useNavigate();
+const APIs = import.meta.env.VITE_BACKEND_URL
+
+
+  const handleSubmit = (e) => {
+    setLoginLoading(true)
+    e.preventDefault();
+    fetch(`${APIs}user/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        emp_id: email,
+        password: password,
+        emp_status: selectedrole,
+      }),
+    })
+      .then((e2) => {
+        if (e2.status == 200) {
+          fetch(`${APIs}user/profile`, {
+          method:"GET",
+          credentials:'include'})
+          .then((e)=> e.json())
+          .then((data)=>{console.log(data.data[0]), setUserData(data.data[0])})
+          setUserLoggedIn(true)
+          
+          localStorage.setItem("login", true)
+           setLoginLoading(false)
+          
+          navigate('/dashboard')
+           }
+        else if (e2.status == 400){
+            setErrorCode("400")
+        }
+        else if (e2.status == 500){
+            setErrorCode("500")
+            console.log("Dispallllllll")
+        }
+           else{
+             setLoginLoading(false)
+            setError(true)
+        }
+      })
+      .catch((e) => {
+        setLoginLoading(false)
+        setErrorCode(e.message)
+         setLoginLoading(true)
+      }
+      
+      )
+      .finally(()=>{ 
+        setTimeout(()=>{
+          setErrorCode("")
+        },3000)
+        setLoginLoading(false)})
+  };
+
+  console.log(userData);
+
+
+  const empData = [
+    {
+      icon:User2Icon,
+      title:"Employee Portal",
+      desc:"Expense Submitter"
+    },
+      {
+      icon:UserCheck2,
+      title:"Validator Portal",
+      desc:"Pre-Validation & Review"
+    },
+      {
+      icon:ShieldCheck,
+      title:"Admin Dashboard",
+      desc:"Management & Configuration "
+    }
+  ]
+  
+  console.log(selectedrole)
+
+  const matchedEmpData = empData.filter(e => (e?.title.toLocaleLowerCase()).includes(selectedrole?.toLowerCase()) )
+const Icon = matchedEmpData[0]?.icon;
+
+  return (
+  <div className=" h-screen rounded-xl flex items-center justify-center ">
+      <div className="lg:w-1/2 w-full h-full hidden  lg:flex bg-gradient-to-r from-orange-400 to-orange-600 p-7 justify-center items-center">
+
+
+<div className="text-white space-y-4  max-w-2xl mx-auto">
+   <div className=" pt-2  flex flex-col self-start ">
+        <div className="flex items-center gap-2">
+         <p className=" w-12 h-12 flex items-center justify-center rounded-xl bg-orange-100 text-orange-600 text-xl font-bold"> EF</p>
+
+         <div className="f">
+           <h2 className="text-sm font-medium ">
+          ExpenseFlow
+        </h2>
+        
+         </div>
+        </div>
+        
+        
+      </div>
+
+  <h5 className="text-4xl font-bold ">Streamline Your
+Expense Management</h5>
+
+<p className="font-bold opacity-80">Banking-grade expense platform with AI-powered validation, real-time approvals, and comprehensive compliance.</p>
+</div>
+    </div>
+<div className="lg:w-1/2 w-full h-full  bg-orange-50   flex items-center flex-col">
+{/* Header */}
+<div className="mt-3 rounded-xl overflow-hidden">
+      <div className=" pt-2 pb-6 flex flex-col self-start ">
+        <div className="flex items-center gap-2">
+         <p className=" w-12 h-12 flex items-center justify-center rounded-xl bg-orange-100 text-orange-600 text-xl font-bold"> EF</p>
+
+         <div className="f">
+           <h2 className="text-xl  text-gray-900">
+          ExpenseFlow
+        </h2>
+        <p className="text-xs text-gray-500 mt-1">
+          Sign in as <span className="font-medium text-orange-600">{selectedrole}</span>
+        </p>
+         </div>
+        </div>
+        
+        
+      </div>
+
+  <div className=" rounded-xl shadow gap-2 flex justify-center flex-col">
+  
+      
+
+      <div className=" bg-white rounded-2xl w-[400px]  ">
+      
+         {/* tab */}
+
+      <div className="grid grid-cols-3 place-items-center rounded-t-xl  gap-4 bg-gray-50">
+  
+<div className={`${selectedrole == "employee" ? "bg-white border-b-2 rounded-tl-xl border-orange-400" :"bg-none"} flex items-center flex-col  w-full p-4`}
+onClick={()=> setSelectedRole("employee")}>
+          {/* icon */}
+          <span className=""><User2Icon className="size-4"/></span>
+          <p className="text-[10px] font-medium">Employee</p>
+        </div>
+
+<div className={`${selectedrole == "validator" ? "bg-white border-b-2 border-orange-400" :"bg-none"} flex items-center flex-col  w-full p-4`}
+onClick={()=> setSelectedRole("validator")}>
+          {/* icon */}
+          <span className=""><UserCheck2Icon className="size-4"/></span>
+          <p className="text-[10px] font-medium">Validator</p>
+        </div>
+
+
+     
+<div className={`${selectedrole == "admin" ? "bg-white border-b-2  rounded-tr-xl border-orange-400" :"bg-none"} flex items-center flex-col  w-full p-4`}
+onClick={()=> setSelectedRole("admin")}>
+          {/* icon */}
+          <span className=""><ShieldCheck className="size-4"/></span>
+          <p className="text-[10px] font-medium">Admin</p>
+        </div>
+
+
+      </div>
+
+
+
+  {/* hints */}
+
+
+ <div className="p-2 my-3">
+    <div className={`flex  w-full p-4 rounded-xl items-center gap-2 bg-orange-50/30 border border-b-4 border-orange-200 border`}>
+          {/* icon */}
+          <span className="bg-orange-100 rounded-md p-3">{Icon && <Icon className="size-4"/>}</span> 
+          <div className="flex flex-col gap-1">
+            <p className="text-[12px] font-medium">{matchedEmpData[0]?.title}</p>
+          <p className="text-[10px] font-medium">{matchedEmpData[0]?.desc}</p>
+          </div>
+          
+        </div></div>
+    
+
+  
+
+
+
+
+   
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="px-4 pb-8 space-y-5">
+        {/* Employee ID */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+            Employee ID
+          </label>
+          <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="EXP-7894-90"
+            className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-xs
+                       focus:outline-none focus:ring-0.5 focus:ring-orange-400 focus:border-orange-400"
+            required
+          />
+        </div>
+
+        {/* Password */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            className="w-full text-xs rounded-lg border border-gray-200 px-4 py-2.5 
+                       focus:outline-none focus:ring-0.5 focus:ring-orange-400 focus:border-orange-400"
+            required
+          />
+        </div>
+
+        {/* Error */}
+        {ErrorCode !="" && (
+          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 flex items-center gap-2 transition-all">
+             <Info className="size-4"/> {
+              ErrorCode == "400" ? "Unauthorized Access": ErrorCode == "500" ?"Invaild Username / password": ErrorCode == "Failed to fetch"? "Unable to Fetch": "Invaild Username / password"
+            }
+          </div>
+        )}
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full mt-2 rounded-lg bg-orange-500 py-2.5 font-medium
+                     text-white flex justify-center gap-4 text-xs hover:bg-orange-600 active:scale-[0.98] transition"
+        >
+           {!LoginLoading ? <p> Sign In</p>: <div>signing....</div>}
+        </button>
+
+        {/* Footer */}
+        <div className="text-center">
+          <button
+            type="button"
+            className="text-sm text-gray-500 hover:text-orange-600 transition"
+          >
+            Forgot password?
+          </button>
+        </div>
+      </form>
+
+
+    </div>
+  </div></div>
+  </div>
+  </div>
+
+);
+
+}

@@ -12,11 +12,13 @@ import {
   ChartSpline,
   CircleX,
   PowerIcon,
+  LogOut,
 } from "lucide-react"
+import { adminNavLink, employeeNavLink, validatorNavLink } from "../data/NavLinks"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const {userData} = useGlobalContext();
+  const {userData,selectedrole, setUserData} = useGlobalContext();
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -26,6 +28,36 @@ const Navbar = () => {
   }
 
   const isActive = (path) => location.pathname === path
+let selectedRoleFields;
+
+switch (selectedrole ){
+  case "employee":
+    selectedRoleFields = employeeNavLink;
+    break;
+
+  case "admin":
+    selectedRoleFields = adminNavLink;
+    break;
+
+  case "validator":
+    selectedRoleFields = validatorNavLink;
+    break;
+}
+
+function logout(){
+  fetch(`${import.meta.env.VITE_BACKEND_URL}user/logout`,
+    {
+      credentials:"include",
+      method:"GET"
+    }
+  )
+  .then((e)=> console.log(e.json()))
+  .then((e)=> console.log(e))
+  setUserData("")
+  navigate('/')
+}
+
+const currentPath =  useLocation().pathname;
 
   return (
     <>
@@ -50,7 +82,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 cursor-pointer">
             <User2 size={16} />
             <div>
-              <p className="text-xs font-medium">{userData?.emp?.full_name}</p>
+              <p className="text-[10px] font-medium">{userData?.profile?.full_name}</p>
               <p className="text-[10px] text-orange-600">{userData?.roles_name}</p>
             </div>
           </div>
@@ -100,58 +132,48 @@ const Navbar = () => {
 
         {/* MENU */}
         <ul className="px-4 space-y-2">
-          <li
-            onClick={() => goTo("/employee")}
-            className={`flex items-center gap-2 p-3 text-xs font-medium rounded-lg cursor-pointer
-              ${
-                isActive("/employee")
-                  ? "bg-orange-100 text-orange-700"
-                  : "hover:bg-yellow-200"
-              }`}
-          >
-            <LayoutDashboardIcon size={16} />
-            Dashboard
+         
+         {
+          selectedRoleFields?.map((e)=>(
+            <li
+                  key={e.link}
+                  onClick={() => navigate(e.link)}
+                  className={`${currentPath == e.link ? "bg-orange-400 p-2 text-white":"bg-none hover:bg-orange-100"} text-xs font-medium flex items-center gap-2  p-2 rounded-lg cursor-pointer`}
+                 >
+            <e.Icon size={16} />
+            {e.nav}
           </li>
-
-          <li
-            onClick={() => goTo("/employee/submit")}
-            className={`flex items-center gap-2 p-3 text-xs font-medium rounded-lg cursor-pointer
-              ${
-                isActive("/employee/submit")
-                  ? "bg-orange-100 text-orange-700"
-                  : "hover:bg-yellow-200"
-              }`}
-          >
-            <BadgeIndianRupee size={16} />
-            Submit Expense
-          </li>
-
-          <li
-            className="flex items-center gap-2 p-3 text-xs font-medium rounded-lg hover:bg-yellow-200 cursor-pointer"
-          >
-            <ChartSpline size={16} />
-            Expense Reports
-          </li>
+          ))
+          
+         }
         </ul>
 
         {/* USER FOOTER */}
         <div className="absolute bottom-6 left-0 w-full px-4">
-          <div className="bg-gray-100 p-3 rounded-xl flex items-center gap-3">
-            <div className="bg-orange-400 p-2 rounded-full">
-              <User2 className="text-white" size={16} />
-            </div>
-            <div>
-              <p className="text-xs font-medium">Employee</p>
-              <p className="text-[10px]">Marketing • employee</p>
-            </div>
-          </div>
+         
+           <div className="bg-gray-100 p-3 rounded-xl flex items-center justify-between gap-3">
+             <div className="flex items-center gap-2">
+              <div className="bg-orange-400 p-2 rounded-full">
+               <User2 className="text-white" size={16} />
+             </div>
+             <div>
+               <p className="text-xs font-medium">{userData?.profile?.full_name}</p>
+               <p className="text-[10px]">{userData?.dept_name} • {userData?.roles_name}</p>
+             </div>
+             </div>
 
-          <button className="mt-3 text-xs flex items-center gap-2 mx-auto">
-            <PowerIcon size={14} />
-            Sign out
-          </button>
+               <button 
+    onClick={logout}
+    className="group cursor-pointer w-fit p-1 bg-white hover:bg-red-50 hover:text-red-600 rounded-full transition-all duration-200"
+  >
+    <LogOut className="size-4" />
+   
+  </button>
+           </div>
+
+</div>
         </div>
-      </div>
+ 
     </>
   )
 }
