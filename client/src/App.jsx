@@ -30,10 +30,10 @@ const App = () => {
         {/* missing protected route  */}
         <Route element={<ProtectedRoute/>} >
     <Route path="/*" element={<Layout />}>
-      <Route path="*" element={<Routters />} />
+      <Route path="*" element={<Routters />} /> 
       </Route>
-  
-  </Route>
+      </Route>
+
         </Routes>
  
   ) 
