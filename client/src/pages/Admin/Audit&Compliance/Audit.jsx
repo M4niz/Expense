@@ -622,7 +622,7 @@ useEffect(()=>{
 
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer"
-            checked={categoryForm.receiptRequired} 
+            checked={categoryForm.rec_req} 
             onChange={(e) => setCategoryForm({ ...categoryForm, rec_req: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
@@ -637,7 +637,7 @@ useEffect(()=>{
           </div>
           <label className="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" className="sr-only peer" 
-            checked={categoryForm.active}
+            checked={categoryForm.is_active}
             onChange={(e) => setCategoryForm({ ...categoryForm, is_active: e.target.checked })}
             />
             <div className="w-9 h-5 bg-yellow-400 rounded-full peer-checked:bg-orange-400 transition" />
