@@ -8,6 +8,7 @@ const EmployeeDashboard = () => {
     const statuses = [ "All Status", "Pending", "Approved", "Rejected", "Need Info", "Draft", "Processing", "Reimbursement", "Escalated", "Paid" ];
     const ctg =["All Categories", "Travel", "Meals & entertainment", "Transpotaion", "Accomendation","Offie Suplliers"];
     const [Refresh, setRefresh] = useState(false)
+    const [openExpense, setopenExpense] = useState(false)
     const [myExpenseData, setMyExpenseData] = useState("")
     const [searchKeys , setSearchKeys ] = useState("")
     const [selectedCategory , setSelectedCategory ] = useState("")
@@ -336,7 +337,7 @@ ctg?.map((e)=>(
         </td>
         <td className="px-4 py-2 text-xs">{e?.expense.receipt == "Uploaded"? <TicketCheck className='size-4 text-green-600'/>:<CircleXIcon className='size-4 text-red-600'/>}</td>
         <td className="px-4 py-2 text-xs items-center flex cursor-pointer hover:underline justify-center  gap-2">
-          <Eye className='size-4 text-black'/>
+          <Eye onClick={()=>setopenExpense(true)}className='size-4 text-black'/>
           <Edit3 className='size-3 text-black'/>
         </td>
       </tr>
@@ -348,6 +349,21 @@ ctg?.map((e)=>(
 </div>
 
     </section>
+    {openExpense && (
+      <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center">
+    {/* Expense Page Container */}
+    <div className="w-full max-w-6xl h-[90vh] bg-[#fff7ed] rounded-2xl shadow-xl overflow-y-auto relative">
+      <button
+        onClick={() => setopenExpense(false)}
+        className=" cursor-pointer absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+      >
+        ✕
+      </button>
+
+      {/* Expense Page */}
+    </div>
+  </div>
+    )}
 
 
 

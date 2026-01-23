@@ -216,17 +216,30 @@ const handleAddCategory = async () => {
       throw new Error("Failed to add category");
     }
   setOpenAddCategory(false);
-  setCategoryForm({
-  cat_name: "",
-  limit: 0,
-  description: "",
-  rec_req: false,
-  is_active: false,
-})
+//   setCategoryForm({
+//   cat_name: "",
+//   limit: 0,
+//   description: "",
+//   rec_req: false,
+//   is_active: false,
+// })
 }
 
-function handleUpdateCategory(){
+const handleUpdateCategory = async () => {
   console.log(categoryForm)
+  const res = await fetch(import.meta.env.VITE_BACKEND_URL+`category/update_category/${categoryForm.id}` , {
+    method:"PATCH",
+    credentials:'include',
+    headers:{
+       "Content-Type": "application/json"
+    },
+    body:JSON.stringify(categoryForm)
+    
+  })
+   if (!res.ok) {
+      throw new Error("Failed to Update category");
+    }
+  setOpenAddCategory(false);
   
 }
 
@@ -260,7 +273,7 @@ useEffect(()=>{
   .then((res)=> setCategoryData(res.data))
  
 },[])
-  // console.log(CategoryData);
+  console.log(CategoryData);
 
 
   return (
@@ -523,7 +536,7 @@ useEffect(()=>{
             </span>
 
             <p className="text-sm font-medium capitalize">
-              {cat.name}
+              {cat.cat_name}
             </p>
           </div>
 
@@ -532,14 +545,14 @@ useEffect(()=>{
             <button 
                 onClick={() => {
               setIsEditMode(true)
-              setSelectedCategory(cat)
+              // setSelectedCategory(cat)
               setCategoryForm({
               id:cat.id,
-              name: cat.name,
+              cat_name: cat.cat_name,
               limit: cat.limit,
               description: cat.description,
-              receiptRequired: cat.receipt_req,
-              active: cat.is_active,
+              rec_req: cat.rec_req,
+              is_active: cat.is_active,
               })
               setOpenAddCategory(true)
               }}
@@ -587,7 +600,7 @@ useEffect(()=>{
           <input
             type="text"
             placeholder="e.g. Travel & Transportation"
-            value={categoryForm.name}
+            value={isEditMode?categoryForm.cat_name:""}
             onChange={(e) => setCategoryForm({ ...categoryForm, cat_name: e.target.value })}
             className="w-full rounded-lg border bg-orange-50 border-gray-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-orange-300"
           />
