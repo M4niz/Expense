@@ -1,7 +1,8 @@
-import { Album, ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit2, Edit3, Eye, HdIcon, PlusCircle, Receipt, RefreshCw, Search, Ticket, TicketCheck, Timer } from 'lucide-react'
+import { Album, ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit2, Edit3, Eye, HdIcon, PlusCircle, Receipt, RefreshCw, Search, Ticket, TicketCheck, Timer, Clock, FileText } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useGlobalContext from '../../config/GlobalStateContext';
+import ExpenseDetails from './ExpenseDetails';
 
 const EmployeeDashboard = () => {
     const navigate=useNavigate()
@@ -10,10 +11,11 @@ const EmployeeDashboard = () => {
     const [Refresh, setRefresh] = useState(false)
     const [openExpense, setopenExpense] = useState(false)
     const [myExpenseData, setMyExpenseData] = useState("")
+    
     const [searchKeys , setSearchKeys ] = useState("")
     const [selectedCategory , setSelectedCategory ] = useState("")
     const [selectedStatus , setSelectedStatus ] = useState("")
-    const {userData} = useGlobalContext()
+    const {userData,SingleExpenseData, setSingleExpenseData} = useGlobalContext()
 
     // sample data
 //     const expenses = [
@@ -157,6 +159,30 @@ function dateFormater(date){
 
 }
 
+function viewExpense(e_data,e){
+  setopenExpense(true)
+  setSingleExpenseData({
+            exp_id: e_data.exp_id,
+            profile_id: e_data.profile_id,
+            amount: e_data.amount,
+            date: e_data.date,
+            merchant: e_data.merchant,
+            business_purpose: e_data.business_purpose,
+            cat_name: e.cat_name,
+            advance_option: e_data?.advance_option,
+            reciept: null,
+            status: e_data.status,
+            priority: e_data.priority,
+            compliance: e_data.compliance,
+            next_level: e_data.next_level,
+            created_at: e_data.created_at,
+            updated_at: e_data.updated_at
+          }
+
+  )
+  console.log(SingleExpenseData)
+}
+
 const filteredData =
   myExpenseData&&myExpenseData?.filter((e) => {
     const exp = e.expense ?? {};
@@ -290,7 +316,6 @@ ctg?.map((e)=>(
       <th className="px-4 py-2 text-xs font-semibold text-gray-600">Actions</th>
     </tr>
   </thead>
-
  {
  <tbody>
     { filteredData && filteredData?.map((e, idx) => (
@@ -303,7 +328,6 @@ ctg?.map((e)=>(
        <td className='flex flex-col '>
          <span className="px-4  text-[11px] font-medium ">{dateFormater(e.expense.created_at)}</span>
         <span className="px-4  text-[10px] font-medium text-gray-500">{e.expense.exp_id}</span>
-        
        </td>
         <td className="px-4 py-2 text-[11px] font-medium ">{e.expense.merchant}</td>
         <td className="px-4 py-2 text-[11px] font-medium ">{e.cat_name}</td>
@@ -332,12 +356,12 @@ ctg?.map((e)=>(
                 : "bg-red-50 text-red-500 border border-red-200"
             }`}
           >
-             {e.expense.compliance}
+          {e.expense.compliance}
           </span>
         </td>
         <td className="px-4 py-2 text-xs">{e?.expense.receipt == "Uploaded"? <TicketCheck className='size-4 text-green-600'/>:<CircleXIcon className='size-4 text-red-600'/>}</td>
         <td className="px-4 py-2 text-xs items-center flex cursor-pointer hover:underline justify-center  gap-2">
-          <Eye onClick={()=>setopenExpense(true)}className='size-4 text-black'/>
+          <Eye onClick={()=>viewExpense(e.expense,e)}className='size-4 text-black'/>
           <Edit3 className='size-3 text-black'/>
         </td>
       </tr>
@@ -361,6 +385,10 @@ ctg?.map((e)=>(
       </button>
 
       {/* Expense Page */}
+      <ExpenseDetails
+        expense={SingleExpenseData}
+        onClose={() => setopenExpense(false)}
+      />
     </div>
   </div>
     )}
