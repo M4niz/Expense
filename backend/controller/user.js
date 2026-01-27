@@ -1,4 +1,6 @@
 const {db}=require('../db/db')
+const csv = require('csv-parser');
+const fs = require('fs');
 const {profile}=require('../model/user/profile')
 const {user}=require('../model/user/user')
 const {sql,eq}=require('drizzle-orm')
@@ -12,12 +14,55 @@ const {allow_category}=require('../model/user/allowed_category')
 const {employee_config}=require('../model/user/emp_config')
 const {valitador_config}=require('../model/user/validator_config')
 
-const signup=async(req,res)=>{
+const generate_emp_id=async(req,res,next)=>{
     try{
-        const {emp_id,email,dept_id,full_name,emp_status,welcome_email}=req.body
+        let emp_id='E_121111'
+        let user_detail=await db.select({id:profile.profile_id}).from(profile)
+        if(user_detail[user_detail.length-1]){
+            user_detail=user_detail[user_detail.length-1].id.split('_')[1]
+            emp_id=`E_${Number(user_detail)+1}`
+        }
+        return res.status(200).json({
+                msg:'THIS IS THE EMP Id',
+                emp_id:emp_id
+        })
+    }catch(err){
+        next(err)
+    }
+}
+
+const manager=async(req,res,next)=>{
+    try{
+
+    }catch(err){
+        next(err)
+    }
+}
+
+const generate_dept=async(req,res,next)=>{
+    try{
+        const all_dept=await db.select().from(dept)
+        if(all_dept.length==0){
+            return res.status(200).json({
+                msg:"The dept data is empty go to add the dept"
+            })
+        }
+        res.status(200).json({
+            msg:'dept',
+            data:all_dept
+        })
+    }catch(err){
+        next(err)
+    }
+}
+
+const signup=async(req,res,next)=>{
+    try{
+        const {emp_id,email,dept_id,full_name,allow_cat,emp_status,welcome_email}=req.body
+        console.log(allow_cat)
         if(!emp_id||!email||!dept_id||!full_name||!emp_status){
             return res.status(400).json({
-                msg:"Invalid data"
+                msg:"Invalid data's"
             })
         }
        let finish=await db.transaction(async(table)=>{
@@ -44,6 +89,7 @@ const signup=async(req,res)=>{
            
         const emp_role_detail=await table.insert(employee_roles).values({profile_id:emp_id,role_id:role_detail[0].role_id})
         if(emp_status=='employee'){
+            console.log(req.body)
             const {reporting_manager,expense_limit,allow_cat}=req.body;
             if(!reporting_manager||!expense_limit||!allow_cat){
                 return res.status(400).json({
@@ -113,7 +159,16 @@ const signup=async(req,res)=>{
         
         return true
     })
-    
+    const {password}=req.body
+    const hashpass=await encrypt(password)
+    let value=await db.select({user_id:user.user_id}).from(user)
+    let value_id='U_111111'
+    if(value[value.length-1]){
+        let gen_id=value[value.length-1].user_id.split('_')[1]
+        value_id=`U_${Number(gen_id)+1}`
+    }
+    const data=await db.insert(user).values({profile_id:emp_id,password_hash:hashpass,user_id:value_id})
+            
     if(!finish){
         return res.status(400).json({
             msg:'Invalid data'
@@ -123,21 +178,18 @@ const signup=async(req,res)=>{
         msg:"user inserted"
     })
     }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal err"
-        })
+        next(err)
     }
 }
 
- const login=async(req,res)=>{
+ const login=async(req,res,next)=>{
     try{
         const {emp_id,password,emp_status}=req.body;
-        if(!emp_id||!password||!emp_status){
-            return res.status(400).json({
-                msg:"Some data missing"
-            })
-        }
+        // if(!emp_id||!password||!emp_status){
+        //     return res.status(400).json({
+        //         msg:"Some data missing"
+        //     })
+        // }
         const details=await db.select({roles:roles}).from(profile)
         .innerJoin(employee_roles,eq(employee_roles.profile_id,emp_id))
         .innerJoin(roles,eq(roles.role_id,employee_roles.role_id))
@@ -174,18 +226,15 @@ const signup=async(req,res)=>{
             token:val
         })
     }catch(err){
-        console.log(err)
-        res.status(500).json({
-            msg:"internal server err"
-        })
+        next(err)
     }
 }
 
-const forget_pass=async(req,res)=>{
+const forget_pass=async(req,res,next)=>{
 
 }
 
- const my_profile=async(req,res)=>{
+ const my_profile=async(req,res,next)=>{
     try{
         const id = req.user
         const result=await db.select({profile:profile,dept_name:dept.name,roles_name:roles.role_name}).from(profile)
@@ -203,10 +252,7 @@ const forget_pass=async(req,res)=>{
             data:result
         })
     }catch(err){
-        console.log("err : ",err)
-        res.status(500).json({
-            msg:"internal server err"
-        })
+        next(err)
     }
 }
 
@@ -240,4 +286,81 @@ const user_overview=async(req,res)=>{
     }
 
 };
-module.exports={signup,login,logout,my_profile,user_overview}
+
+const import_csv = async (req, res) => {
+  try {
+    const users = [];
+
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on('data', (row) => users.push(row))
+      .on('end', async () => {
+        for (const u of users) {
+          await db.insert(profile).values({
+            profile_id: u.emp_id,
+            full_name: u.full_name,
+            email: u.email,
+            dept_id: u.dept_id,
+          });
+        }
+
+        res.status(200).json({ msg: "Users imported successfully" });
+      });
+  } catch (err) {
+    res.status(500).json({ msg: "CSV import failed" });
+  }
+};
+
+const export_csv = async (req, res) => {
+  const users = await db.select().from(profile);
+
+  let csvData = "emp_id,full_name,email,dept_id\n";
+  users.forEach(u => {
+    csvData += `${u.profile_id},${u.full_name},${u.email},${u.dept_id}\n`;
+  });
+
+  res.header("Content-Type", "text/csv");
+  res.attachment("users.csv");
+  res.send(csvData);
+};
+const search_employee_ids = async (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.json([]);
+
+  const data = await db
+    .select({ emp_id: profile.profile_id })
+    .from(profile)
+    .innerJoin(employee_roles, eq(employee_roles.profile_id, profile.profile_id))
+    .innerJoin(roles, eq(roles.role_id, employee_roles.role_id))
+    .where(
+      sql`${profile.profile_id} ILIKE ${`%${q}%`}
+       AND ${roles.role_name} = 'employee'`
+    )
+    .orderBy(profile.profile_id)
+    .limit(10);
+
+  res.json(data);
+};
+
+
+const bulk_role = async (req, res) => {
+  const { emp_ids, role_name } = req.body;
+  console.log(req.body);
+
+  const role = await db
+    .select()
+    .from(roles)
+    .where(eq(roles.role_name, role_name));
+
+  for (const id of emp_ids) {
+    await db.insert(employee_roles).values({
+      profile_id: id,
+      role_id: role[0].role_id,
+    });
+  }
+
+  res.status(200).json({ msg: "Roles assigned successfully" });
+};
+
+module.exports={signup,login,logout,my_profile,user_overview,import_csv,export_csv,bulk_role,generate_emp_id,search_employee_ids,generate_dept}
+
