@@ -4,7 +4,7 @@ const {category}=require('../model/expense/category')
 const {expense_approve_history}=require('../model/expense/expense_approve_history')
 const {advance_option}=require('../model/expense/advance_option')
 const {loc}=require('../model/location')
-const { eq,ne, or ,and} = require('drizzle-orm')
+const { eq,ne, or ,and, asc} = require('drizzle-orm')
 const {valitador_config}=require('../model/user/validator_config')
 const { profile } = require('../model/user/profile')
 const { employee_config } = require('../model/user/emp_config')
@@ -19,6 +19,11 @@ const new_expense=async(req,res,next)=>{
         const id=req.user
         const {amount,date,merchant,category_id,business_purpose,adv_option}=req.body;
         const iamges=req.files
+        if(!amount||!date||!merchant||!category_id){
+            return res.status(400).json({
+                msg:'Invalid'
+            })
+        }
         // rec require condition
         // const rec_permission=await db.select({permission:category.rec_req}).from(category)
         // .where(eq(category.category_id,category_id))
@@ -61,7 +66,7 @@ const new_expense=async(req,res,next)=>{
                 }
                 const option=await table.insert(advance_option).values({advance_opt_id:adv_id,project_name:project,payment_method:pay_met,attendees:attendee,billable_client:billable_client,location:loc_id})
             }
-            const exp_detail=await table.select({id:expense.exp_id}).from(expense)
+            const exp_detail=await table.select({id:expense.exp_id}).from(expense).orderBy(asc(expense.exp_id))
             if(exp_detail[exp_detail.length-1]){
                 let uniq=exp_detail[exp_detail.length-1].id.split('_')[1]
                 new_id=`EXP_${Number(uniq)+1}`
@@ -203,6 +208,7 @@ const show_particuler_expense=async(req,res,next)=>{
 const show_pending_expense=async(req,res,next)=>{
     try{
         const id=req.user
+        console.log(id)
         await db.transaction(async(table)=>{
         let value=await table.select({scope:valitador_config.validation_scope}).from(valitador_config).where(eq(valitador_config.profile_id,id))
         if(!value){
@@ -210,11 +216,11 @@ const show_pending_expense=async(req,res,next)=>{
                 msg:'invalid'
             })
         }
-        console.log(value[0].scope)
         if(value[0].scope=='ALL_DEPT'){
             const all_dept=await table.select({expense:expense,cat_name:category.cat_name}).from(expense)
             .innerJoin(category,eq(expense.cat_id,category.category_id))
-            .where(eq(expense.status,'Pending'),ne(expense.profile_id,id))
+            .where(and(ne(expense.profile_id,id),eq(expense.next_level,'Validator'),ne(expense.status,'Rejected')))
+           
             if(all_dept.length==0){
                 return res.status(201).json({
                     msg:'No pending expenses'

@@ -5,11 +5,8 @@ const {
 } = require('../controller/user');
 
 const express=require('express')
-const multer = require('multer');
 const router=express.Router()
-const upload = multer({ dest: 'uploads/' });
-
-const {signup,login,logout,my_profile}=require('../controller/user')
+const upload=require('../midleware/multer')
 const {signup,login,logout,my_profile,generate_emp_id}=require('../controller/user')
 const {token_decode}=require('../midleware/jwt')
 const {user_overview}=require("../controller/user")

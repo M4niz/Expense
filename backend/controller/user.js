@@ -259,7 +259,7 @@ const user_overview=async(req,res)=>{
     }
 
 };
-module.exports={signup,login,logout,my_profile,user_overview,generate_emp_id}
+
 const import_csv = async (req, res) => {
   try {
     const users = [];
@@ -315,4 +315,5 @@ const bulk_role = async (req, res) => {
 
   res.status(200).json({ msg: "Roles assigned successfully" });
 };
-module.exports={signup,login,logout,my_profile,user_overview,import_csv,export_csv,bulk_role}
+
+module.exports={signup,login,logout,my_profile,user_overview,import_csv,export_csv,bulk_role,generate_emp_id}
