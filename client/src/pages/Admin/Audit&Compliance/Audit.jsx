@@ -239,6 +239,7 @@ const handleUpdateCategory = async () => {
    if (!res.ok) {
       throw new Error("Failed to Update category");
     }
+  
   setOpenAddCategory(false);
   
 }
@@ -272,7 +273,7 @@ useEffect(()=>{
   .then((res)=> res.json())
   .then((res)=> setCategoryData(res.data))
  
-},[])
+},[CategoryData])
   console.log(CategoryData);
 
 
