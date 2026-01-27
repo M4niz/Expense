@@ -1,6 +1,5 @@
-const {pgTable,integer,numeric,boolean}=require('drizzle-orm/pg-core')
+const {pgTable,integer,numeric,boolean,text,varchar}=require('drizzle-orm/pg-core')
 const {org}=require('../model/org')
-const { varchar } = require('drizzle-orm/mysql-core')
 
 const secure_passwprd=pgTable('security',{
     org_id:varchar('org_id',{length:20}).references(()=>org.organization_id),
