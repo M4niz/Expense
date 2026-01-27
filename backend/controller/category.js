@@ -1,4 +1,4 @@
-const { eq } = require('drizzle-orm')
+const { eq, and } = require('drizzle-orm')
 const {db}=require('../db/db')
 const {category}=require('../model/expense/category')
 const {allow_category}=require('../model/user/allowed_category')
@@ -137,4 +137,21 @@ const permission_cat=async(req,res,next)=>{
     }
 }
 
-module.exports={cre_category,show_category,delete_category,update_category,permission_cat}
+const all_category=async(req,res,next)=>{
+    try{
+        const id=req.user
+        const list_of_category=await db.select({id:category.category_id,name:category.cat_name}).from(category).where(and(eq(category.profile_id,id),eq(category.is_active,true)))
+        if(list_of_category.length==0){
+            return res.status(200).json({
+                msg:'The category is empty go to add the category'
+            })
+        }
+        res.status(200).json({
+            msg:'category',
+            list_of_category
+        })
+    }catch(err){
+        next(err)
+    }
+}
+module.exports={cre_category,show_category,delete_category,update_category,permission_cat,all_category}
