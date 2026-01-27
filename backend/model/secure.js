@@ -17,5 +17,11 @@ const secure_passwprd=pgTable('security',{
     sso:boolean('sso'),
     identity_provider:text('identity_provider'),
     session_timeout:numeric('session_timeout'),
-    
+    max_session:numeric('max_session'),
+    ip_restriction:boolean('ip_restriction'),
+    field_level_enc:boolean('field_level_enc'),
+    audit_log:boolean('audit_log'),
+    log_retention:numeric('log_retention')
 })
+
+module.exports={secure_passwprd}

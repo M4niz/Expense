@@ -2,6 +2,7 @@ const {db}=require('../db/db')
 const {org}=require('../model/org')
 const {loc}=require('../model/location')
 const { eq } = require("drizzle-orm");
+const add_secure_detail=require('../utils/add_security_detail')
  
 const create_org=async(req,res,next)=>{
   try{
@@ -29,9 +30,14 @@ const create_org=async(req,res,next)=>{
         msg:'Data missing'
       })
     }
+    let org_id='ORG_11111'
+    let value=await db.select({id:org.organization_id}).from(org)
+    if(value[value.length-1]){
+      
+    }
     const organization=await db.insert(org).values({
       profile_id:id,
-      organization_id:'',
+      organization_id:org_id,
       org_logo:'',
       industry_type:industry_type,
       emp_counut:employee_count,
