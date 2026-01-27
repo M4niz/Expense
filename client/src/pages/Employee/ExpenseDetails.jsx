@@ -1,4 +1,14 @@
-import { Check } from "lucide-react"
+import {
+  Check,
+  X,
+  Clock,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Info,
+} from "lucide-react"
+
+/* ---------------- DATE FORMAT ---------------- */
 
 const formatDate = (date) => {
   if (!date) return "-"
@@ -6,7 +16,6 @@ const formatDate = (date) => {
   const input = new Date(date)
   const today = new Date()
 
-  // Normalize BOTH to midnight (local calendar day)
   const inputDay = new Date(
     input.getFullYear(),
     input.getMonth(),
@@ -19,8 +28,9 @@ const formatDate = (date) => {
     today.getDate()
   )
 
-  const diffDays =
-    Math.round((todayDay - inputDay) / 86400000)
+  const diffDays = Math.round(
+    (todayDay - inputDay) / 86400000
+  )
 
   if (diffDays === 0) return "Today"
   if (diffDays === 1) return "Yesterday"
@@ -32,16 +42,92 @@ const formatDate = (date) => {
   })
 }
 
+/* ---------------- STATUS CONFIG ---------------- */
+
+export const StatusConfig = {
+  Submitted: {
+    label: "Submitted",
+    class: "bg-blue-100 text-blue-700",
+    icon: Clock,
+  },
+  Validated: {
+    label: "Validated",
+    class: "bg-yellow-100 text-yellow-700",
+    icon: AlertTriangle,
+  },
+  Approved: {
+    label: "Approved",
+    class: "bg-green-100 text-green-700",
+    icon: CheckCircle,
+  },
+  Paid: {
+    label: "Paid",
+    class: "bg-emerald-100 text-emerald-700",
+    icon: CheckCircle,
+  },
+  Rejected: {
+    label: "Rejected",
+    class: "bg-red-100 text-red-700",
+    icon: XCircle,
+  },
+  "Needs-info": {
+    label: "Needs Info",
+    class: "bg-orange-100 text-orange-700",
+    icon: Info,
+  },
+}
+
+/* ---------------- TIMELINE CONFIG ---------------- */
+
+const timelineSteps = ["Submitted", "Validated", "Approved"]
+
+const stepUI = {
+  done: {
+    circle: "bg-green-500 text-white",
+    icon: Check,
+  },
+  pending: {
+    circle: "bg-yellow-400 text-white",
+    icon: Clock,
+  },
+  rejected: {
+    circle: "bg-red-500 text-white",
+    icon: X,
+  },
+  upcoming: {
+    circle: "bg-gray-300 text-white",
+    icon: null,
+  },
+}
 
 export default function ExpenseDetails({ expense, onClose }) {
-  const statusOrder = ["Submitted", "Validated", "Approved"]
-  const currentIndex = statusOrder.indexOf(expense.status)
+  /* ---------------- TIMELINE LOGIC ---------------- */
 
-  const getStepState = (index) => {
-    if (index < currentIndex) return "done"
-    if (index === currentIndex) return "active"
-    return "upcoming"
+  const getTimelineState = (step) => {
+    const status = expense.status
+
+    if (status === "Rejected") {
+      if (step === "Submitted") return "done"
+      if (step === "Validated") return "rejected"
+      return "upcoming"
+    }
+
+    if (status === "Needs-info") {
+      if (step === "Submitted") return "done"
+      if (step === "Validated") return "pending"
+      return "upcoming"
+    }
+
+    if (status === "Paid") return "done"
+
+    const order = ["Submitted", "Validated", "Approved"]
+    return order.indexOf(step) <= order.indexOf(status)
+      ? "done"
+      : "upcoming"
   }
+
+  const statusCfg = StatusConfig[expense.status] || {}
+  const StatusIcon = statusCfg.icon
 
   return (
     <div className="p-6 space-y-6 text-sm">
@@ -60,22 +146,16 @@ export default function ExpenseDetails({ expense, onClose }) {
           Expense Details
         </h1>
         <p className="text-xs text-gray-500 mt-1">
-          Expense #{expense.exp_id} • {expense.status}
+          Expense #{expense.exp_id} • {statusCfg.label}
         </p>
       </div>
 
       {/* Status Badge */}
       <span
-        className={`inline-flex px-3 py-1 rounded-full text-[11px] font-medium
-          ${
-            expense.status === "Approved"
-              ? "bg-green-100 text-2xl text-green-700"
-              : expense.status === "Validated"
-              ? "bg-yellow-100 text-yellow-700"
-              : "bg-gray-100 text-gray-600"
-          }`}
+        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium ${statusCfg.class}`}
       >
-        {expense.status}
+        {StatusIcon && <StatusIcon size={14} />}
+        {statusCfg.label}
       </span>
 
       {/* Timeline */}
@@ -85,18 +165,12 @@ export default function ExpenseDetails({ expense, onClose }) {
         </h3>
 
         <div className="relative flex justify-between items-center">
-          {/* Line */}
-          <div className="absolute left-0 right-0 top-3 h-[2px] bg-gray-200">
-            <div
-              className="h-full bg-gradient-to-r from-green-400 to-orange-400"
-              style={{
-                width: `${(currentIndex / 2) * 100}%`,
-              }}
-            />
-          </div>
+          {/* Base Line */}
+          <div className="absolute left-0 right-0 top-3 h-[2px] bg-gray-200" />
 
-          {statusOrder.map((step, i) => {
-            const state = getStepState(i)
+          {timelineSteps.map((step) => {
+            const state = getTimelineState(step)
+            const Icon = stepUI[state].icon
 
             return (
               <div
@@ -104,16 +178,9 @@ export default function ExpenseDetails({ expense, onClose }) {
                 className="relative z-10 flex flex-col items-center w-1/3"
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs
-                    ${
-                      state === "done"
-                        ? "bg-green-500 text-white"
-                        : state === "active"
-                        ? "bg-yellow-400 text-white"
-                        : "bg-gray-300 text-white"
-                    }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center shadow-sm ${stepUI[state].circle}`}
                 >
-                  {state === "done" && <Check size={14} />}
+                  {Icon && <Icon size={14} />}
                 </div>
 
                 <p className="mt-2 text-[11px] font-medium text-gray-700">
@@ -121,10 +188,12 @@ export default function ExpenseDetails({ expense, onClose }) {
                 </p>
 
                 <p className="text-[10px] text-gray-500">
-                  {i === 0
-                    ? formatDate(expense.created_at)
-                    : i <= currentIndex
-                    ? formatDate(expense.updated_at)
+                  {state !== "upcoming"
+                    ? formatDate(
+                        step === "Submitted"
+                          ? expense.created_at
+                          : expense.updated_at
+                      )
                     : ""}
                 </p>
               </div>
@@ -145,7 +214,7 @@ export default function ExpenseDetails({ expense, onClose }) {
               ₹{expense.amount}
             </p>
             <p className="text-xs text-green-600">
-              {expense.status}
+              {statusCfg.label}
             </p>
           </div>
 

@@ -196,6 +196,7 @@ const filteredData =
     );
   }) 
 console.log(filteredData)
+console.log(myExpenseData)
 
 
   return (
@@ -302,7 +303,11 @@ ctg?.map((e)=>(
                 </div>
 </div>
 
-<div className="overflow-scroll border border-[#d9770633] rounded-xl">
+{
+!myExpenseData?<div className="items-center justify-items-center">
+          <p className='font-bold text-md'>No Pending Expenses</p>
+        </div>
+:<div className="overflow-scroll border border-[#d9770633] rounded-xl">
 <table className="w-full bg-white  border-[#d9770633] rounded-xl tbscroll">
   <thead>
     <tr className="bg-orange-50 text-left">
@@ -369,7 +374,7 @@ ctg?.map((e)=>(
   </tbody>
  }
 </table>
-</div>
+</div>}
 </div>
 
     </section>
