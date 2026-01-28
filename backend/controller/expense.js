@@ -83,6 +83,8 @@ const new_expense=async(req,res,next)=>{
                 let uniq=exp_detail[exp_detail.length-1].id.split('_')[1]
                 new_id=`EXP_${Number(uniq)+1}`
             }
+
+
             const result=await table.insert(expense).values({
                 profile_id:id,
                 exp_id:new_id,
@@ -103,7 +105,16 @@ const new_expense=async(req,res,next)=>{
                 return res.status(400).json({
                     msg:'inavlid'
                 })
+
             }
+
+            const data ={
+    userName: user_data.full_name,
+    email:user_data.email,
+    status: "Pending",
+    date: new Date().toDateString()
+  }
+            sendEmailProcess("Expense_Submitted",data )
             const sta=await table.insert(expense_approve_history).values({
                 profile_id:id,
                 exp_id:new_id,
