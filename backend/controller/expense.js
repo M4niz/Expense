@@ -19,12 +19,23 @@ const new_expense=async(req,res,next)=>{
     try{
         const id=req.user
         const {amount,date,merchant,category_id,business_purpose,adv_option}=req.body;
-        const iamges=req.files
-        if(!amount||!date||!merchant||!category_id){
-            return res.status(400).json({
-                msg:'Invalid'
-            })
-        }
+        const images=req.files
+        const category_detail=await db.select().from(category).where(eq(category.category_id,category_id))
+        let compilant=null
+        // if(category_detail[0].limit<amount){
+        //         compilant=true
+        // }
+
+        // if(category_detail[0].rec_req&&!images){
+        //     return res.status(400).json({
+        //         msg:'Without receipt you can\'t submit the expense'
+        //     })
+        // }
+        // if(!amount||!date||!merchant||!category_id){
+        //     return res.status(400).json({
+        //         msg:'Invalid'
+        //     })
+        // }
         // rec require condition
         // const rec_permission=await db.select({permission:category.rec_req}).from(category)
         // .where(eq(category.category_id,category_id))
@@ -83,8 +94,9 @@ const new_expense=async(req,res,next)=>{
                 advance_option:adv_option?adv_id:null,
                 status:'Pending',
                 priority:'Low',
-                compliance:'Compliant',
+                compliance:compilant==null?'Compliant':compilant?'Warning':'Violation',
                 next_level:'Validator',
+                reciept:images?images.originalname:null
             }).returning({profile_id:expense.profile_id})
             if(!result){
                 table.rollback()
@@ -175,7 +187,9 @@ const show_particuler_expense=async(req,res,next)=>{
                     msg:'The expense not found'
                 })
             }
-            const status=await table.select().from(expense_approve_history).where(eq(expense_approve_history.exp_id,id))
+            const status=await table.select({status:expense_approve_history,name:profile.username}).from(expense_approve_history)
+            .innerJoin(profile,eq(profile.profile_id,expense_approve_history.profile_id))
+            .where(eq(expense_approve_history.exp_id,id))
             if(!status){
                 return res.status(404).json({
                     msg:'The expense not found'
