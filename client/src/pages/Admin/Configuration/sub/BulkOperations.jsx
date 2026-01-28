@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 export default function BulkOperations() {
+  const [dbCategories, setDbCategories] = useState([]);
   const [generatedEmpId, setGeneratedEmpId] = useState("");
   const [empSearch, setEmpSearch] = useState("");
 const [empOptions, setEmpOptions] = useState([]);
@@ -20,6 +21,7 @@ const [empOptions, setEmpOptions] = useState([]);
   const [sendWelcome, setSendWelcome] = useState(true);
   const [enableNotif, setEnableNotif] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectPayload,setSelectPayload] = useState([])
 
   const [form, setForm] = useState({
     full_name: "",
@@ -33,15 +35,7 @@ const [empOptions, setEmpOptions] = useState([]);
     priority_level: "",
   });
 
-  const categories = [
-    "Travel",
-    "Meals",
-    "Accommodation",
-    "Office Supplies",
-    "Training",
-    "Medical",
-    "All categories",
-  ];
+ 
  const searchEmpIds = async (val) => {
   setEmpSearch(val);
 
@@ -60,24 +54,17 @@ if (!res.ok) return;
   const data = await res.json();
   setEmpOptions(data);
 };
-  const toggleCategory = (cat) => {
-    const realCats = categories.filter((c) => c !== "All categories");
+  const toggleCategory = (catId) => {
+  setSelectedCategories((prev) =>
+    prev.includes(catId)
+      ? prev.filter((c) => c !== catId)
+      : [...prev, catId]
+      
+  );
+  console.log(selectedCategories)
+};
 
-    if (cat === "All categories") {
-      setSelectedCategories((prev) =>
-        prev.length === realCats.length ? [] : realCats
-      );
-      return;
-    }
 
-    setSelectedCategories((prev) => {
-      const updated = prev.includes(cat)
-        ? prev.filter((c) => c !== cat)
-        : [...prev, cat];
-
-      return updated.length === realCats.length ? realCats : updated;
-    });
-  };
   const fetchEmpId = async () => {
   try {
     const res = await fetch(
@@ -128,7 +115,16 @@ if (!res.ok) return;
     a.download = "users.csv";
     a.click();
   };
-
+  function add_category(cat_id){
+    if(selectPayload.includes(cat_id)){
+      let value=selectPayload.filter(res=>res!=cat_id)
+      setSelectPayload(value)
+      console.log(selectPayload)
+    }else{
+      selectPayload.push(cat_id)
+      console.log(selectPayload)
+    }
+  }
   const handleBulkRoleAssign = async () => {
     await fetch(`${import.meta.env.VITE_BACKEND_URL}user/bulk-role`, {
       method: "POST",
@@ -142,7 +138,19 @@ if (!res.ok) return;
 
     alert("Bulk role assigned");
   };
+  const fetchCategories = async () => {
+  const res = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}category/all_category`,
+    { credentials: "include" }
+  );
+  if (!res.ok) return;
 
+  const data = await res.json();
+  const cats = data.data || [];
+
+  setDbCategories(cats);
+  setSelectedCategories(cats.map(cat => cat.cat_id)); 
+};
   const handleSendBulkInvites = async () => {
     await fetch(`${import.meta.env.VITE_BACKEND_URL}user/send-invites`, {
       method: "POST",
@@ -163,7 +171,7 @@ if (!res.ok) return;
             dept_id: form.dept_id,
             reporting_manager: form.reporting_manager,
             expense_limit: Number(form.expense_limit),
-            allow_cat: selectedCategories,
+            allow_cat: selectPayload,
             welcome_email: sendWelcome,
           }
         : {
@@ -175,6 +183,8 @@ if (!res.ok) return;
             priority_level: form.priority_level,
             notify: enableNotif,
           };
+
+      console.log(payload)
 
     const res = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}user/signup`,
@@ -239,7 +249,9 @@ if (!res.ok) return;
           <button
             onClick={() => {
           setOpenDialog(true);
-            if (userType === "employee") fetchEmpId();
+            if (userType === "employee") {fetchEmpId();
+            fetchCategories();
+            }
               }}
 
             className="w-full flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded-xl text-xs"
@@ -272,7 +284,8 @@ if (!res.ok) return;
   setUserType(userType === "employee" ? "validator" : "employee");
   setEmpSearch("");          
   setEmpOptions([]);         
-  setGeneratedEmpId("");    
+  setGeneratedEmpId("");   
+  setSelectedCategories([]);  
   setForm((p) => ({ ...p, emp_id: "" }));
 }}
   className={`w-10 h-5 rounded-full p-[2px] transition ${
@@ -365,7 +378,7 @@ if (!res.ok) return;
               />
 
               {userType === "validator" && (
-                <Select
+                <SelectedDept
                   label="Validation Scope"
                   onChange={(e) =>
                     setForm({ ...form, validator_scope: e.target.value })
@@ -396,29 +409,47 @@ if (!res.ok) return;
                   <label className="font-medium block mb-1">
                     Allowed Categories
                   </label>
+                  <button
+  type="button"
+  onClick={() =>
+    setSelectedCategories(
+      selectedCategories.length === dbCategories.length
+        ? []
+        : dbCategories.map((cat) => cat.cat_id)
+    )
+  }
+  className={`px-3 py-1 rounded-full text-[11px] border ${
+    selectedCategories.length === dbCategories.length
+      ? "bg-orange-500 text-white border-orange-500 mb-2"
+      : "bg-white border-orange-200 mb-1"
+  }`}
+>
+  All Categories
+</button>
                   <div className="flex flex-wrap gap-2">
-                    {categories.map((cat) => {
-                      const isActive =
-                        cat === "All categories"
-                          ? selectedCategories.length ===
-                            categories.length - 1
-                          : selectedCategories.includes(cat);
+              {Array.isArray(dbCategories) &&
+  dbCategories.map((cat) => {
+    const name = cat.cat_name;
+    const id=cat.cat_id;
+    const isActive = selectedCategories.includes(id);
 
-                      return (
-                        <button
-                          key={cat}
-                          type="button"
-                          onClick={() => toggleCategory(cat)}
-                          className={`px-3 py-1 rounded-full text-[11px] border ${
-                            isActive
-                              ? "bg-orange-500 text-white border-orange-500"
-                              : "bg-white border-orange-200"
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      );
-                    })}
+    return (
+      <button
+        key={cat.id}
+        type="button"
+        onClick={() => add_category(cat.id)}
+        className={`px-3 py-1 rounded-full text-[11px] border ${
+          isActive
+            ? "bg-orange-500 text-white border-orange-500"
+            : "bg-white border-orange-200"
+        }`}
+      >
+        {name}
+      </button>
+    );
+  })}
+
+
                   </div>
                 </div>
               )}
@@ -518,6 +549,20 @@ const Select = ({ label, onChange }) => (
       <option>HR</option>
       <option>Engineering</option>
       <option>Operations</option>
+    </select>
+  </div>
+);
+const SelectedDept = ({ label, onChange }) => (
+  <div>
+    <label className="font-medium block mb-1">{label}</label>
+    <select
+      onChange={onChange}
+      className="w-full rounded-xl bg-orange-50 px-3 py-2 border border-orange-100"
+    >
+      <option value="">Select</option>
+      <option>All Departments</option>
+      <option>Own Departments Only</option>
+      <option>Assigned Teams</option>
     </select>
   </div>
 );

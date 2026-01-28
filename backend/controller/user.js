@@ -404,3 +404,4 @@ const bulk_role = async (req, res) => {
 };
 
 module.exports={signup,login,logout,my_profile,user_overview,import_csv,export_csv,bulk_role,generate_emp_id,search_employee_ids,generate_dept}
+
