@@ -1,59 +1,14 @@
-import { ActivityIcon, Download, Edit3, Eye, RefreshCw, Search, Target, Timer, Zap } from 'lucide-react'
+import { ActivityIcon, CircleXIcon, Download, Edit3, Eye, RefreshCw, Search, Target, Timer, Zap } from 'lucide-react'
 import React, { Activity, useEffect, useState } from 'react'
 import { CardComp } from '../../Employee/EmployeeDashboard'
 import { formatDateTime } from '../../../utils/dateFormater'
+import ExpenseReview from '../../Validator/ExpenseReview'
+import ExpenseAproval from './ExpenseAproval'
 
 const Apporvals = () => {
-
-    const req = 
-        [
-  {
-    "id": "REQ-001",
-    "type": "Reimbursement",
-    "employee": {
-      "employeeId": "EMP-1023",
-      "name": "John Doe",
-      "department": "Finance"
-    },
-    "details": "Travel expenses for client meeting",
-    "amount": 245.75,
-    "dateSubmitted": "2025-01-10",
-    "priority": "High",
-    "status": "Pending",
-    "actions": ["Approve", "Reject"]
-  },
-  {
-    "id": "REQ-002",
-    "type": "Purchase Request",
-    "employee": {
-      "employeeId": "EMP-1041",
-      "name": "Sarah Smith",
-      "department": "IT"
-    },
-    "details": "New laptop for development work",
-    "amount": 1350.00,
-    "dateSubmitted": "2025-01-08",
-    "priority": "Medium",
-    "status": "Approved",
-    "actions": ["View"]
-  },
-  {
-    "id": "REQ-003",
-    "type": "Expense Claim",
-    "employee": {
-      "employeeId": "EMP-1007",
-      "name": "Michael Brown",
-      "department": "Marketing"
-    },
-    "details": "Conference registration fee",
-    "amount": 499.99,
-    "dateSubmitted": "2025-01-05",
-    "priority": "Low",
-    "status": "Rejected",
-    "actions": ["View", "Resubmit"]
-  }
-]
 const [Mypending,setMypending] = useState([])
+const [openBox,setOpenBox] = useState(false)
+const [id,setId] = useState()
 const pending_approvals = () => {
   fetch(import.meta.env.VITE_BACKEND_URL+"expenses/admin_expense",
     {method:'GET',
@@ -76,6 +31,14 @@ useEffect(()=>{
 },[]
 )
 console.log(Mypending)
+
+//open
+function openAproval(exp_id){
+  console.log(exp_id)
+  setId(exp_id)
+  setOpenBox(true)
+
+}
 
   return (
     <div className='p-3 space-y-6'>
@@ -263,7 +226,9 @@ console.log(Mypending)
 
       {/* Actions */}
       <td className='p-2'>
-        <button className="px-4 rounded-md cursor-pointer py-2 p-2 border border-r-2 border-b-2 border-orange-300 text-xs flex ">
+        <button 
+        onClick={()=>openAproval(e.expense.exp_id)}
+        className="px-4 rounded-md cursor-pointer py-2 p-2 border border-orange-300 text-xs flex gap-2 ">
           <Eye className="size-4  text-black" />
         Review
         </button>
@@ -278,6 +243,23 @@ console.log(Mypending)
 </div>
 
     </section>
+    {openBox && (
+      <div className="fixed inset-0 z-50 w-full mx-auto bg-black/30 flex items-center justify-center">
+    {/* Expense Page Container */}
+    <div className="w-full max-w-md mx-auto bg-[#fff7ed] rounded-2xl shadow-xl overflow-y-auto relative">
+      <button
+        onClick={() => setOpenBox(false)}
+        className=" cursor-pointer absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+      >
+        <CircleXIcon className='text-red-600 size-5'/>
+      </button>
+      <ExpenseAproval
+      exp_id={id}
+      onClose={() => setopenExpense(false)}
+      />
+      </div>
+      </div>
+    )}
 
 
 
