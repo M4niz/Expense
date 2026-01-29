@@ -1,8 +1,9 @@
-import { Album, ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit2, Edit3, Eye, HdIcon, PlusCircle, Receipt, RefreshCw, Search, Ticket, TicketCheck, Timer, Clock, FileText } from 'lucide-react'
+import { ArrowUp, Calendar, CircleXIcon, DollarSign, Download, Edit3, Eye, PlusCircle, RefreshCw, Search, Ticket, TicketCheck, Timer  } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import useGlobalContext from '../../config/GlobalStateContext';
 import ExpenseDetails from './ExpenseDetails';
+import { formatDateTime } from '../../utils/dateFormater';
 
 const EmployeeDashboard = () => {
     const navigate=useNavigate()
@@ -199,6 +200,16 @@ console.log(filteredData)
 console.log(myExpenseData)
 
 
+
+// date
+
+const today = new Date().toLocaleDateString('en-GB', {
+  weekday:"short",
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric'
+});
+
   return (
    <div className='p-3 space-y-4 '>
        <section className='py-7 space-y-7 lg:space-y-0 bg-linear-to-r  from-orange-50 via-50% to-white border-[#d9770633]  borders p-4 rounded-md  lg:flex items-center justify-between '>
@@ -210,7 +221,7 @@ console.log(myExpenseData)
 
                 <div className="space-y-">
                     <h1 className='font-semibold text-2xl'>Hi 👋, <span className='text-orange-600'>{userData?.profile?.full_name}</span></h1>
-                    <p className='text-sm font-medium text-[#653600f2]'>Welcome to your expense dashboard • Wednesday, January 7, 2026</p>
+                    <p className=''>Welcome to your expense dashboard <span className='text-lg ml-2'>•{today}</span></p>
                 </div>
                  </div>
                     {/* buttons for applies */}
