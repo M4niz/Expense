@@ -243,6 +243,7 @@ const add_validator=async(req,res,next)=>{
         .innerJoin(employee_roles,eq(employee_roles.profile_id,emp_id))
         .innerJoin(roles,eq(roles.role_id,employee_roles.role_id))
         .where(eq(profile.profile_id,emp_id))
+        console.log("detail : ",details)
         if(!details){
             res.status(403).json({
                 msg:"Unauthorzied Access"
