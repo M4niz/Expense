@@ -16,7 +16,8 @@ const feedback_router = require("./router/feedback.js");
 const email_route = require("./router/emailRoute.js");
 const org_router = require("./router/org.js");
 
-const analyticsRouter = require("./router/analytics");
+const analyticsRouter = require("./router/analytics.js");
+// const expense_forn_field=require("./router/expense_form_field.js")
 
 const handle_error = require("./utils/handle_error.js");
 const file_not_found = require("./utils/file_not_fount.js");
@@ -51,14 +52,17 @@ app.use("/workflow", work_flow_router);
 app.use("/feedback", feedback_router);
 app.use("/send_email", email_route);
 app.use("/organization", org_router);
-
+// app.use("form-fields",expense_form_field)
 app.use("/analytics", analyticsRouter);
+
+app.use(handle_error);
+app.get('/server', (req, res)=>{
+  res.send("The port is Working.....")
+})
+
 
 
 app.use("/", file_not_found);
-
-app.use(handle_error);
-
 app.listen(port, () => {
   console.log(" Server running on port", port);
 });

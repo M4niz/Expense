@@ -1,1 +1,0 @@
-ALTER TABLE "emailTemplate" RENAME TO "emailtemplate";
