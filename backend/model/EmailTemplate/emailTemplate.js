@@ -1,6 +1,5 @@
 import { boolean, timestamp } from "drizzle-orm/gel-core";
-import { varchar } from "drizzle-orm/mysql-core";
-import { pgTable } from "drizzle-orm/pg-core";
+import { pgTable,varchar } from "drizzle-orm/pg-core";
 
 export const emailTemplate =pgTable('emailTemplate',{ 
   id: varchar("id").primaryKey(),
