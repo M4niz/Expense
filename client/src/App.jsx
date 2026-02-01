@@ -2,7 +2,7 @@ import React from "react"
 import Layout from "./pages/Layout"
 import AuthenticateUser from './pages/LoginPage/AuthenticateUser'
 import RoleSelection from "./pages/RoleSelectionBoard"
-
+//test
 
 
 import { Routes, Route, Navigate } from "react-router-dom"
@@ -15,13 +15,13 @@ import PublicRoute from "./route/PublicRoute"
 import NotFound from "./pages/NotFoundPage"
 import AccesManagement from "./pages/Admin/access_manager/AccesManagement"
 // import useGlobalContext from './config/GlobalStateContext'
- 
 
- 
+
+
 const App = () => {
-   const { userLoggedIn } = useGlobalContext();
-   
- console.log(userLoggedIn)
+  const { userLoggedIn } = useGlobalContext();
+
+  console.log(userLoggedIn)
 
 
   return (
@@ -29,7 +29,7 @@ const App = () => {
     //   <Route element={<PublicRoute/>}>
     //       <Route path="/" element={<AuthenticateUser/>} />
     //       </Route>
-     
+
     //     <Route element={<ProtectedRoute/>} >
     // <Route path="/*" element={<Layout />}>
     //   <Route path="*" element={<Routters />} /> 
@@ -38,23 +38,22 @@ const App = () => {
 
     //     </Routes>
 
-   <Routes>
-      <Route element={<PublicRoute/>}>
-          <Route path="/" element={<AuthenticateUser/>} />
-          </Route>
-     
-        {/* <Route element={<ProtectedRoute/>} > */}
-    <Route path="/*" element={<Layout />}>
-      <Route path="*" element={<Routters />} /> 
+    <Routes>
+      <Route element={<PublicRoute />}>
+        <Route path="/" element={<AuthenticateUser />} />
       </Route>
-    
-    <Route path="admins" element={<AccesManagement/>}/>
 
-<Route path="*" element={<NotFound/>} />
-        </Routes>
-  ) 
+      {/* <Route element={<ProtectedRoute/>} > */}
+      <Route path="/*" element={<Layout />}>
+        <Route path="*" element={<Routters />} />
+      </Route>
+
+      <Route path="admins" element={<AccesManagement />} />
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  )
 }
- 
+
 export default App
- 
- 
+
